@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+
+
+/* Hide scrollbar but still scrollable */
+html {
+  scroll-behavior: smooth;
+  overflow-y: scroll; /* or auto */
+}
+
+html::-webkit-scrollbar {
+  width: 0; /* hide scrollbar in Webkit browsers */
+  background: transparent;
+}
+
+html {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+/* Apply offset for in-page anchors when using fixed navbar */
+[id] {
+  scroll-margin-top: 64px; /* match your navbar height */
+}
