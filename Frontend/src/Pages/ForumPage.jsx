@@ -64,7 +64,7 @@ const ForumPage = () => {
           return (
             <motion.div
               key={forum._id}
-              className="rounded-lg  hover:bg-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer"
+              className="rounded-lg  hover:bg-gray-100 shadow-sm hover:shadow-md transition-all "
               whileHover={{ scale: 1.01 }}
               transition={{ duration: 0.3 }}
               initial="hidden"
@@ -81,7 +81,7 @@ const ForumPage = () => {
                 </Link>
                 <button
                   onClick={() => setExpanded(isOpen ? null : forum._id)}
-                  className="text-gray-600 hover:text-gray-800 transition-colors"
+                  className="text-gray-600 cursor-pointer hover:text-gray-800 transition-colors"
                 >
                   {isOpen ? <FaChevronUp size={18} /> : <FaChevronDown size={18} />}
                 </button>
@@ -93,7 +93,7 @@ const ForumPage = () => {
                   <div className="flex gap-4 mt-2">
                     <Link
                       to={`/forum/${forum._id}`}
-                      className="  text-indigo-700 font-medium rounded transition"
+                      className="  text-indigo-700  cursor-pointer font-medium rounded transition"
                     >
                       View Full
                     </Link>

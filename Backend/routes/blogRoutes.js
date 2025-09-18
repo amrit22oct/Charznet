@@ -27,7 +27,7 @@ router.get("/:id/comments", getComments);
 router
   .route("/:id")
   .get(getBlogById)
-  .put(authMiddleware, updateBlog)
+  .put(authMiddleware, upload.single("image"), updateBlog) // ✅ add Multer
   .delete(authMiddleware, deleteBlog);
 
 export default router;

@@ -58,7 +58,7 @@ const ForumPost = ({ thread, author }) => {
     <div className="space-y-2">
       {replies.length === 0 && <p className="text-gray-400 text-sm">No replies yet.</p>}
       {replies.slice(0, 2).map((reply) => (
-        <div key={reply._id} className="flex items-start gap-3 p-2 rounded-lg border bg-gray-50">
+        <div key={reply._id} className="flex items-start gap-3 p-2 rounded-lg bg-gray-50">
           <ProfilePic src={reply.author?.avatar} name={reply.author?.name} size="sm" />
           <div className="flex flex-col">
             <span className="text-xs font-semibold text-gray-700">{reply.author?.name || "Anonymous"}</span>

@@ -19,10 +19,17 @@ const Blog = () => {
   const [brokenImages, setBrokenImages] = useState({});
   const navigate = useNavigate();
 
+  // ✅ Get token and current user ID
+  const token = localStorage.getItem("token");
+  const currentUser = JSON.parse(localStorage.getItem("user")); // user object with _id
+  const currentUserId = currentUser?._id;
+
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await API.get("/blogs?limit=5");
+        const res = await API.get("/blogs?limit=5", {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
         const blogList = Array.isArray(res.data.blogs)
           ? res.data.blogs
           : [res.data];
@@ -35,7 +42,7 @@ const Blog = () => {
       }
     };
     fetchBlogs();
-  }, []);
+  }, [token]);
 
   const getImageSrc = (blog) =>
     brokenImages[blog._id] || !blog.image?.trim()
@@ -49,9 +56,7 @@ const Blog = () => {
 
   // ✅ Skeleton loader for consistent layout
   const SkeletonCard = ({ className }) => (
-    <div
-      className={`bg-gray-200 animate-pulse rounded-lg ${className}`}
-    ></div>
+    <div className={`bg-gray-200 animate-pulse rounded-lg ${className}`}></div>
   );
 
   if (error) return <p className="text-center py-10 text-red-500">{error}</p>;
@@ -102,6 +107,8 @@ const Blog = () => {
                   author={blog.author?.name || "Unknown"}
                   image={getImageSrc(blog)}
                   tags={blog.tags}
+                  token={token}                 // ✅ pass JWT
+                  currentUserId={currentUserId} // ✅ pass user ID
                 />
               ))}
         </div>
@@ -120,6 +127,8 @@ const Blog = () => {
                 author={blogs[2].author?.name || "Unknown"}
                 image={getImageSrc(blogs[2])}
                 tags={blogs[2].tags}
+                token={token}
+                currentUserId={currentUserId}
                 className="h-full"
               />
             )
@@ -141,6 +150,8 @@ const Blog = () => {
                   author={blog.author?.name || "Unknown"}
                   image={getImageSrc(blog)}
                   tags={blog.tags}
+                  token={token}                 // ✅ pass JWT
+                  currentUserId={currentUserId} // ✅ pass user ID
                 />
               ))}
         </div>

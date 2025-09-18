@@ -69,8 +69,8 @@ const AuthMenu = ({ user, mobile = false, closeMenu }) => {
       {/* Desktop Avatar Icon */}
       {!mobile && (
         <div className="flex items-center gap-2">
-          <Link to="/create-posts">
-  <Button>Create</Button>
+          <Link to="/create-posts/blogs">
+  <Button >Create</Button>
 </Link>
 
           <FaUserCircle

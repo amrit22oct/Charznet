@@ -4,7 +4,7 @@ const Button = ({ children, onClick, styles = "", disabled = false }) => {
       onClick={onClick}
       disabled={disabled}
       className={`
-        inline-flex items-center justify-center
+        inline-flex items-center justify-center cursor-pointer
         rounded-full px-5 py-2 m-2 w-[132px] h-[40px]
         font-semibold transition duration-200
         ${disabled

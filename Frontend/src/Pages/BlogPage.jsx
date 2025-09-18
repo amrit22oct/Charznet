@@ -18,7 +18,7 @@ const BlogPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const limit = 8; 
+  const limit = 8;
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -28,7 +28,6 @@ const BlogPage = () => {
 
         setBlogs(res.data.blogs || []);
 
-       
         setTotalPages(res.data.totalPages || 1);
       } catch (err) {
         console.error(err);
@@ -60,7 +59,8 @@ const BlogPage = () => {
 
   if (loading) return <p className="text-center py-10">Loading blogs...</p>;
   if (error) return <p className="text-center text-red-600 py-10">{error}</p>;
-  if (!blogs.length) return <p className="text-center py-10">No blogs found.</p>;
+  if (!blogs.length)
+    return <p className="text-center py-10">No blogs found.</p>;
 
   return (
     <section className="max-w-[1240px] mx-auto px-4 md:px-8 py-10">
@@ -87,13 +87,17 @@ const BlogPage = () => {
             variants={fadeInUp}
             viewport={{ once: true }}
           >
-            <Link to={`/blogs/${ blog._id}`}>
-            <img
-  src={getImageUrl(blog.image)}
-  alt={blog.title}
-  onError={(e) => (e.currentTarget.src = DEFAULT_IMAGE)}
-  className={`w-full h-full ${getImageUrl(blog.image) === DEFAULT_IMAGE ? "object-contain bg-black" : "object-cover"} transform group-hover:scale-105 transition duration-500`}
-/>
+            <Link to={`/blogs/${blog._id}`}>
+              <img
+                src={getImageUrl(blog.image)}
+                alt={blog.title}
+                onError={(e) => (e.currentTarget.src = DEFAULT_IMAGE)}
+                className={`w-full h-full ${
+                  getImageUrl(blog.image) === DEFAULT_IMAGE
+                    ? "object-contain bg-black"
+                    : "object-cover"
+                } transform group-hover:scale-105 transition duration-500`}
+              />
 
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 p-3 md:p-5 text-white font-semibold text-base md:text-xl">
                 {blog.title}
@@ -105,18 +109,18 @@ const BlogPage = () => {
 
       {/* Pagination */}
       <div className="flex justify-center gap-4 mt-8">
-  <Button onClick={handlePrev} disabled={page === 1}>
-    Prev
-  </Button>
+        <Button onClick={handlePrev} disabled={page === 1}>
+          Prev
+        </Button>
 
-  <span className="flex items-center text-gray-700 font-semibold">
-    Page {page} of {totalPages}
-  </span>
+        <span className="flex items-center text-gray-700 font-semibold">
+          Page {page} of {totalPages}
+        </span>
 
-  <Button onClick={handleNext} disabled={page === totalPages}>
-    Next
-  </Button>
-</div>
+        <Button onClick={handleNext} disabled={page === totalPages}>
+          Next
+        </Button>
+      </div>
     </section>
   );
 };

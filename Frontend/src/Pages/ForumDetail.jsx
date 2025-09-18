@@ -84,7 +84,7 @@ const ForumDetail = () => {
     <div className="max-w-[900px] mx-auto px-4 md:px-6 py-10">
       <button
         onClick={() => navigate(-1)}
-        className="text-blue-600 hover:underline mb-4"
+        className="text-blue-600 hover:underline cursor-pointer mb-4"
       >
         ← Back
       </button>
@@ -145,7 +145,7 @@ const ForumDetail = () => {
             {visibleReplies < replies.length && (
               <button
                 onClick={handleViewMore}
-                className="text-blue-600 hover:underline text-sm mt-2 self-start"
+                className="text-blue-600 hover:underline  cursor-pointer text-sm mt-2 self-start"
               >
                 View More
               </button>
@@ -164,7 +164,7 @@ const ForumDetail = () => {
             <button
               onClick={handlePostReply}
               disabled={posting || !newReply.trim()}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="bg-blue-600 text-white px-4 py-2 cursor-pointer rounded-lg hover:bg-blue-700 disabled:opacity-50"
             >
               {posting ? "Posting..." : "Post"}
             </button>

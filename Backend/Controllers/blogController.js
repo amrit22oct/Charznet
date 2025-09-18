@@ -84,17 +84,44 @@ export const getBlogById = async (req, res) => {
 };
 
 export const updateBlog = async (req, res) => {
-  const blog = await Blog.findById(req.params.id);
-  if (!blog) return res.status(404).json({ message: "Blog not found" });
+  try {
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) return res.status(404).json({ message: "Blog not found" });
 
-  if (blog.author.toString() !== req.user._id.toString()) {
-    return res.status(401).json({ message: "Not authorized" });
+    if (blog.author.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
+    const body = req.body || {};
+    const title = body.title;
+    const content = body.content;
+    const summary = body.summary;
+    let tags = body.tags;
+
+    if (title) blog.title = title;
+    if (content) blog.content = content;
+    if (summary) blog.summary = summary;
+    if (tags) {
+      try {
+        blog.tags =
+          typeof tags === "string" ? JSON.parse(tags) : Array.isArray(tags) ? tags : [];
+      } catch (err) {
+        return res.status(400).json({ message: "Tags must be a valid JSON array" });
+      }
+    }
+
+    if (req.file) {
+      blog.image = `/uploads/${req.file.filename}`;
+    }
+
+    await blog.save();
+    res.json(blog);
+  } catch (error) {
+    console.error("UpdateBlog Error:", error);
+    res.status(500).json({ message: error.message });
   }
-
-  Object.assign(blog, req.body);
-  await blog.save();
-  res.json(blog);
 };
+
 
 export const deleteBlog = async (req, res) => {
   const blog = await Blog.findById(req.params.id);

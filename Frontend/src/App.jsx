@@ -1,4 +1,5 @@
-import React, { Suspense, lazy, useState } from "react";
+// App.jsx
+import React, { Suspense, lazy, useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -12,7 +13,7 @@ import { useSelector } from "react-redux";
 import Navbar from "./Components/Navbar";
 import Footer from "./Pages/Footer";
 
-// Lazy-loaded pages (load smoothly with Suspense)
+// Lazy-loaded pages
 const Login = lazy(() => import("./Pages/Login"));
 const Register = lazy(() => import("./Pages/Register"));
 const Dashboard = lazy(() => import("./Pages/Dashboard"));
@@ -26,6 +27,7 @@ const BlogDetail = lazy(() => import("./Pages/BlogDetail"));
 const ForumPage = lazy(() => import("./Pages/ForumPage"));
 const ForumDetail = lazy(() => import("./Pages/ForumDetail"));
 const PostsPage = lazy(() => import("./Pages/PostsPage"));
+const NotFoundPage = lazy(() => import("./Pages/NotFoundPage")); // 404 Page
 
 // ProtectedRoute HOC
 const ProtectedRoute = ({ children }) => {
@@ -36,8 +38,8 @@ const ProtectedRoute = ({ children }) => {
 
 // Simple global loader
 const Loader = () => (
-  <div className="flex items-center justify-center h-full py-20 text-gray-400 text-lg">
-    Loading...
+  <div className="flex items-center justify-center h-[80vh]">
+    <p className="text-lg text-gray-500 animate-pulse">Loading...</p>
   </div>
 );
 
@@ -49,7 +51,13 @@ function AppRoutes() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [token, setToken] = useState(localStorage.getItem("token"));
 
+  const [pageLoaded, setPageLoaded] = useState(false); // Track Suspense load
   const background = state?.background;
+
+  // Set pageLoaded to true after first render (Suspense resolves)
+  useEffect(() => {
+    setPageLoaded(true);
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -63,15 +71,12 @@ function AppRoutes() {
         />
       </div>
 
-      {/* Main content grows and leaves space for footer */}
+      {/* Main content */}
       <main className="flex-grow pt-20">
         <Suspense fallback={<Loader />}>
           <Routes location={background || location}>
             {/* Auth */}
-            <Route
-              path="/login"
-              element={!background ? <Login /> : null}
-            />
+            <Route path="/login" element={!background ? <Login /> : null} />
             <Route
               path="/register"
               element={!background ? <Register /> : null}
@@ -86,11 +91,11 @@ function AppRoutes() {
                 </ProtectedRoute>
               }
             />
-            
 
-{/* Protected Route for PostsPage */}
+            {/* Protected Route for PostsPage */}
+            {/* create new blog or forum post */}
 <Route
-  path="/create-posts"
+  path="/create-posts/:type"
   element={
     <ProtectedRoute>
       <PostsPage />
@@ -98,6 +103,18 @@ function AppRoutes() {
   }
 />
 
+{/* edit blog/forum post */}
+<Route
+  path="/create-posts/:type/:id"
+  element={
+    <ProtectedRoute>
+      <PostsPage />
+    </ProtectedRoute>
+  }
+/>
+
+
+            {/* Home */}
             <Route path="/home" element={<Home />} />
 
             {/* Articles */}
@@ -116,8 +133,8 @@ function AppRoutes() {
             <Route path="/form" element={<Form />} />
             <Route path="/profile" element={<Profile />} />
 
-            {/* Catch all */}
-            <Route path="*" element={<Navigate to="/home" />} />
+            {/* Catch all 404 */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
 
           {/* Modal overlay */}
@@ -130,8 +147,8 @@ function AppRoutes() {
         </Suspense>
       </main>
 
-      {/* Footer always at bottom */}
-      <Footer />
+      {/* Footer only shows after page is loaded */}
+      {pageLoaded && <Footer />}
     </div>
   );
 }

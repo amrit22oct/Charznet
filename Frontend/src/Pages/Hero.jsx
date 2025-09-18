@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
 import { getImageUrl } from "../utils/getImageUrl";
+import { motion } from "framer-motion";
 
 const Hero = () => {
   const [articles, setArticles] = useState([]);
@@ -32,7 +33,10 @@ const Hero = () => {
 
     const fetchData = async () => {
       setLoading(true);
-      const [fetchedArticles, fetchedBlogs] = await Promise.all([fetchArticles(), fetchBlogs()]);
+      const [fetchedArticles, fetchedBlogs] = await Promise.all([
+        fetchArticles(),
+        fetchBlogs(),
+      ]);
 
       setArticles(fetchedArticles);
       setBlogs(fetchedBlogs);
@@ -48,39 +52,67 @@ const Hero = () => {
   };
 
   const SkeletonCard = ({ className }) => (
-    <div className={`relative rounded-[24px] bg-gray-200 animate-pulse ${className}`}>
+    <div
+      className={`relative rounded-[24px] bg-gray-200 animate-pulse ${className}`}
+    >
       <div className="absolute bottom-4 left-4 right-4 h-6 bg-gray-300 rounded"></div>
     </div>
   );
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
   const renderCard = (content, type, widthClass) => {
     if (loading) {
-      return <SkeletonCard className={`${widthClass} h-[300px] sm:h-[400px] md:h-[600px]`} />;
+      return (
+        <SkeletonCard
+          className={`${widthClass} h-[300px] sm:h-[400px] md:h-[600px]`}
+        />
+      );
     }
 
     if (!content) {
       return (
-        <div className={`${widthClass} h-[300px] sm:h-[400px] md:h-[600px] flex items-center justify-center bg-gray-100 rounded-[24px]`}>
+        <div
+          className={`${widthClass} h-[300px] sm:h-[400px] md:h-[600px] flex items-center justify-center bg-gray-100 rounded-[24px]`}
+        >
           <p className="text-gray-500 text-lg">No content found.</p>
         </div>
       );
     }
 
     return (
-      <div
+      <motion.div
+        key={content._id}
+        className={`relative rounded-[24px] overflow-hidden ${widthClass} h-[300px] sm:h-[400px] md:h-[600px] cursor-pointer group`}
         onClick={() => handleCardClick(type, content._id)}
-        className={`cursor-pointer relative ${widthClass} h-[300px] sm:h-[400px] md:h-[600px] rounded-[24px] overflow-hidden transform transition duration-500 hover:scale-105 hover:shadow-xl`}
+        whileHover={{ scale: 1.0 }}
+        transition={{ duration: 0.3 }}
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        viewport={{ once: true }}
       >
-        <img
-          src={type === "article" ? content.image || "https://placehold.co/600x400?text=No+Image" : getImageUrl(content.image)}
+        <motion.img
+          src={
+            type === "article"
+              ? content.image || "https://placehold.co/600x400?text=No+Image"
+              : getImageUrl(content.image)
+          }
           alt={content.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transform group-hover:scale-105 transition duration-500"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
         <div className="absolute bottom-4 left-4 right-4 text-white text-[16px] sm:text-[20px] md:text-[28px] lg:text-[36px] font-semibold p-3 md:p-4 rounded-lg drop-shadow-lg">
           {content.title}
         </div>
-      </div>
+      </motion.div>
     );
   };
 
@@ -105,8 +137,16 @@ const Hero = () => {
   return (
     <section className="max-w-[1240px] mx-auto px-4 md:px-8 py-10">
       <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-6">
-        {renderCard(leftContent, leftContent && articles.includes(leftContent) ? "article" : "blog", "w-full md:w-[670px]")}
-        {renderCard(rightContent, rightContent && articles.includes(rightContent) ? "article" : "blog", "w-full md:w-[546px]")}
+        {renderCard(
+          leftContent,
+          leftContent && articles.includes(leftContent) ? "article" : "blog",
+          "w-full md:w-[670px]"
+        )}
+        {renderCard(
+          rightContent,
+          rightContent && articles.includes(rightContent) ? "article" : "blog",
+          "w-full md:w-[546px]"
+        )}
       </div>
     </section>
   );

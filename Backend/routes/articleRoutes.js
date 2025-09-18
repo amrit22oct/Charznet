@@ -18,7 +18,7 @@ router
   .get(getArticles)                     // Public
   .post(authMiddleware, createArticle); // Protected
 
-// ✅ Place like/comments routes BEFORE dynamic :idOrSlug route
+//  Place like/comments routes BEFORE dynamic :idOrSlug route
 router.post("/:id/like", authMiddleware, toggleLikeArticle);
 
 router.post("/:id/comments", authMiddleware, addComment);

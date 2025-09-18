@@ -24,4 +24,9 @@ articleSchema.pre("save", function (next) {
   next();
 });
 
+// Article
+articleSchema.index({ title: "text",  tags: "text" });
+
+
+
 export default mongoose.model("Article", articleSchema);

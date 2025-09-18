@@ -10,4 +10,10 @@ const forumThreadSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+
+
+// ForumThread
+forumThreadSchema.index({ title: "text", });
+
+
 export default mongoose.model("ForumThread", forumThreadSchema);

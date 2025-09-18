@@ -14,6 +14,9 @@ const blogSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+// Blog
+blogSchema.index({ title: "text",  tags: "text" });
+
 
 
 export default mongoose.model("Blog", blogSchema);
