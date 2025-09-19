@@ -76,6 +76,38 @@ export const getThreadById = async (req, res) => {
   }
 };
 
+// Update a thread
+export const updateThread = async (req, res) => {
+  try {
+    const thread = await ForumThread.findById(req.params.id);
+
+    if (!thread) {
+      return res.status(404).json({ message: "Thread not found" });
+    }
+
+    //  Allow update if user is author OR superadmin
+    if (
+      thread.author.toString() !== req.user._id.toString() &&
+      req.user.role !== "superadmin"
+    ) {
+      return res.status(403).json({ message: "Not authorized to update this thread" });
+    }
+
+    const { title, content } = req.body;
+
+    if (title) thread.title = title;
+    if (content) thread.content = content;
+
+    await thread.save();
+
+    res.json({ message: "Thread updated successfully", thread });
+  } catch (error) {
+    console.error("UpdateThread Error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 // Delete a thread and its replies
 export const deleteThread = async (req, res) => {
   try {
@@ -85,7 +117,11 @@ export const deleteThread = async (req, res) => {
       return res.status(404).json({ message: "Thread not found" });
     }
 
-    if (thread.author.toString() !== req.user._id.toString()) {
+    // ✅ Allow delete if user is author OR superadmin
+    if (
+      thread.author.toString() !== req.user._id.toString() &&
+      req.user.role !== "superadmin"
+    ) {
       return res.status(403).json({ message: "Not authorized to delete this thread" });
     }
 
@@ -94,11 +130,12 @@ export const deleteThread = async (req, res) => {
 
     res.json({ message: "Thread and its replies removed successfully" });
   } catch (error) {
+    console.error("DeleteThread Error:", error);
     res.status(500).json({ message: error.message });
   }
 };
 
-// -------------------- REPLIES --------------------
+
 
 // Add reply to a thread
 export const addReply = async (req, res) => {

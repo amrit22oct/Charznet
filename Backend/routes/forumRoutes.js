@@ -1,5 +1,5 @@
 import express from "express";
-import { createThread, getThreads, getThreadById, deleteThread, addReply } from "../Controllers/forumController.js";
+import { createThread, getThreads, getThreadById, deleteThread, addReply, updateThread } from "../Controllers/forumController.js";
 import { authMiddleware } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -11,6 +11,7 @@ router.route("/")
 
 router.route("/:id")
   .get(getThreadById)
+  .put(authMiddleware,updateThread)
   .delete(authMiddleware, deleteThread);
 
 // Replies

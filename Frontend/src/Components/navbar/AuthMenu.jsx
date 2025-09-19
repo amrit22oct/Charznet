@@ -7,7 +7,7 @@ import Button from "../Buttons/Button";
 
 const AuthMenu = ({ user, mobile = false, closeMenu }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [createOpen, setCreateOpen] = useState(false); // New state for create modal
+  const [createOpen, setCreateOpen] = useState(false);
   const menuRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,7 +20,6 @@ const AuthMenu = ({ user, mobile = false, closeMenu }) => {
     if (closeMenu) closeMenu();
   };
 
-  // Close menu or create modal on outside click or Escape
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -66,12 +65,15 @@ const AuthMenu = ({ user, mobile = false, closeMenu }) => {
 
   return (
     <div className="relative" ref={menuRef}>
-      {/* Desktop Avatar Icon */}
+      {/* Desktop */}
       {!mobile && (
         <div className="flex items-center gap-2">
-          <Link to="/create-posts/blogs">
-  <Button >Create</Button>
-</Link>
+          {/* ✅ Show Create button only if role is author or superadmin */}
+          {(user.role === "author" || user.role === "superadmin") && (
+            <Link to="/create-posts/blogs">
+              <Button>Create</Button>
+            </Link>
+          )}
 
           <FaUserCircle
             className="text-2xl cursor-pointer hover:text-gray-500"
@@ -102,19 +104,17 @@ const AuthMenu = ({ user, mobile = false, closeMenu }) => {
       {/* Mobile Menu */}
       {mobile && (
         <div className="flex gap-3 mt-2 flex-col">
-          <Button onClick={() => setCreateOpen((prev) => !prev)}>Create</Button>
+          {/* ✅ Show Create button only for author or superadmin */}
+          {(user.role === "author" || user.role === "superadmin") && (
+            <Button onClick={() => setCreateOpen((prev) => !prev)}>Create</Button>
+          )}
+
           <Link to="/profile" onClick={closeMenu}>
             <Button>Profile</Button>
           </Link>
           <Button onClick={handleLogout}>Logout</Button>
         </div>
       )}
-
-      {/* Create Modal */}
-     
-     
-     
-     
     </div>
   );
 };

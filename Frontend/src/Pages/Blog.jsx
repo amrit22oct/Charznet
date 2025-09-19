@@ -5,12 +5,14 @@ import Button from "../Components/Buttons/Button";
 import API from "../api";
 import { useNavigate } from "react-router-dom";
 
+import DefaultImage from "../assets/CharzNet.jpg";
+
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0 },
 };
 
-const DEFAULT_IMAGE = "https://placehold.co/600x400?text=No+Image+available";
+const DEFAULT_IMAGE = DefaultImage;
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);

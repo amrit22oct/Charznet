@@ -88,23 +88,30 @@ export const updateBlog = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
-    if (blog.author.toString() !== req.user._id.toString()) {
+    // ✅ Allow update if user is author OR superadmin
+    if (
+      blog.author.toString() !== req.user._id.toString() &&
+      req.user.role !== "superadmin"
+    ) {
       return res.status(401).json({ message: "Not authorized" });
     }
 
     const body = req.body || {};
-    const title = body.title;
-    const content = body.content;
-    const summary = body.summary;
-    let tags = body.tags;
+    const { title, content, summary } = body;
+    let { tags } = body;
 
     if (title) blog.title = title;
     if (content) blog.content = content;
     if (summary) blog.summary = summary;
+
     if (tags) {
       try {
         blog.tags =
-          typeof tags === "string" ? JSON.parse(tags) : Array.isArray(tags) ? tags : [];
+          typeof tags === "string"
+            ? JSON.parse(tags)
+            : Array.isArray(tags)
+            ? tags
+            : [];
       } catch (err) {
         return res.status(400).json({ message: "Tags must be a valid JSON array" });
       }
@@ -123,17 +130,28 @@ export const updateBlog = async (req, res) => {
 };
 
 
+
 export const deleteBlog = async (req, res) => {
-  const blog = await Blog.findById(req.params.id);
-  if (!blog) return res.status(404).json({ message: "Blog not found" });
+  try {
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) return res.status(404).json({ message: "Blog not found" });
 
-  if (blog.author.toString() !== req.user._id.toString()) {
-    return res.status(401).json({ message: "Not authorized" });
+    // ✅ Allow delete if user is author OR superadmin
+    if (
+      blog.author.toString() !== req.user._id.toString() &&
+      req.user.role !== "superadmin"
+    ) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
+    await blog.deleteOne();
+    res.json({ message: "Blog removed" });
+  } catch (error) {
+    console.error("DeleteBlog Error:", error);
+    res.status(500).json({ message: error.message });
   }
-
-  await blog.deleteOne();
-  res.json({ message: "Blog removed" });
 };
+
 
 //like or unlike the  blog
 export const toggleLikeBlog = async(req,res) => {

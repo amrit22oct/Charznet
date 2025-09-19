@@ -207,16 +207,26 @@ export const reactivateUser = async (req, res) => {
 export const getMyDetails = async (req, res) => {
   try {
     const userId = req.user._id; // from authMiddleware
+    const role = req.user.role;
 
     const user = await User.findById(userId).select("-password");
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // Fetch authored content
-    const articles = await Article.find({ author: userId });
-    const blogs = await Blog.find({ author: userId });
-    const forumThreads = await Forum.find({ author: userId });
+    let articles, blogs, forumThreads;
 
-    // Fetch interactions
+    if (role === "superadmin") {
+      // 🔑 fetch all content across all users
+      articles = await Article.find().populate("author", "name email role");
+      blogs = await Blog.find().populate("author", "name email role");
+      forumThreads = await Forum.find().populate("author", "name email role");
+    } else {
+      // 🔑 fetch only the current user’s authored content
+      articles = await Article.find({ author: userId });
+      blogs = await Blog.find({ author: userId });
+      forumThreads = await Forum.find({ author: userId });
+    }
+
+    // Fetch interactions (only for the logged-in user, this part stays the same)
     const blogComments = await CommentBlog.find({ author: userId }).populate(
       "blog",
       "title"

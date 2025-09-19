@@ -17,6 +17,7 @@ const ContentEditor = ({ item, canEdit, onEdit, onDelete, authorName }) => {
           <button onClick={onDelete} className="px-2 py-1 bg-red-500 rounded text-white">
             Delete
           </button>
+          
         </div>
       )}
     </div>

@@ -8,7 +8,7 @@ import API from "../api";
 import { getImageUrl } from "../utils/getImageUrl";
 
 const fadeInUp = { hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0 } };
-const DEFAULT_IMAGE = "https://placehold.co/600x400?text=No+Image+available";
+const DEFAULT_IMAGE = "https://placehold.co/600x600?text=No+Image+available";
 
 const BlogModal = ({ id, slug, title, content, author, image, authorImage }) => {
   const navigate = useNavigate();

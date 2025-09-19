@@ -51,13 +51,13 @@ function AppRoutes() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [token, setToken] = useState(localStorage.getItem("token"));
 
-  const [pageLoaded, setPageLoaded] = useState(false); // Track Suspense load
   const background = state?.background;
 
-  // Set pageLoaded to true after first render (Suspense resolves)
-  useEffect(() => {
-    setPageLoaded(true);
-  }, []);
+  // Hide footer on login/register pages// Hide footer on login, register, and dashboard
+const hideFooter = ["/login", "/register", "/dashboard"].some((path) =>
+location.pathname.startsWith(path)
+);
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -71,8 +71,8 @@ function AppRoutes() {
         />
       </div>
 
-      {/* Main content */}
-      <main className="flex-grow pt-20">
+      {/* Main content area */}
+      <main className="flex-grow pt-16">
         <Suspense fallback={<Loader />}>
           <Routes location={background || location}>
             {/* Auth */}
@@ -82,7 +82,7 @@ function AppRoutes() {
               element={!background ? <Register /> : null}
             />
 
-            {/* Home / Dashboard */}
+            {/* Dashboard */}
             <Route
               path="/dashboard"
               element={
@@ -92,29 +92,27 @@ function AppRoutes() {
               }
             />
 
-            {/* Protected Route for PostsPage */}
-            {/* create new blog or forum post */}
-<Route
-  path="/create-posts/:type"
-  element={
-    <ProtectedRoute>
-      <PostsPage />
-    </ProtectedRoute>
-  }
-/>
+            {/* Create new post */}
+            <Route
+              path="/create-posts/:type"
+              element={
+                <ProtectedRoute>
+                  <PostsPage />
+                </ProtectedRoute>
+              }
+            />
 
-{/* edit blog/forum post */}
-<Route
-  path="/create-posts/:type/:id"
-  element={
-    <ProtectedRoute>
-      <PostsPage />
-    </ProtectedRoute>
-  }
-/>
+            {/* Edit post */}
+            <Route
+              path="/create-posts/:type/:id"
+              element={
+                <ProtectedRoute>
+                  <PostsPage />
+                </ProtectedRoute>
+              }
+            />
 
-
-            {/* Home */}
+            {/* Public Pages */}
             <Route path="/home" element={<Home />} />
 
             {/* Articles */}
@@ -137,7 +135,7 @@ function AppRoutes() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
 
-          {/* Modal overlay */}
+          {/* Modal overlay (for background routes) */}
           {background && (
             <Routes>
               <Route path="/login" element={<Login />} />
@@ -147,8 +145,8 @@ function AppRoutes() {
         </Suspense>
       </main>
 
-      {/* Footer only shows after page is loaded */}
-      {pageLoaded && <Footer />}
+      {/* Footer (hidden on login/register) */}
+      {!hideFooter && <Footer />}
     </div>
   );
 }

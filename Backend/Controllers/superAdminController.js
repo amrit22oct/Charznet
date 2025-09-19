@@ -6,9 +6,7 @@ import ForumThread from "../models/ForumThread.js";
 import ForumReply from "../models/ForumReply.js";
 import CommentBlog from "../models/CommentBlog.js";
 
-// ============================
-// USER MANAGEMENT
-// ============================
+
 
 // Get all users
 export const getAllUsers = async (req, res) => {
@@ -100,3 +98,35 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+export const getAllBlogs = async (req,res) => {
+  try {
+    const blogs = await Blog.find().populate("author","name email role");
+    res.json(blogs);
+  } catch (error) {
+    res.status(500).json({message:"failed to fetch the blogs"});
+    
+  }
+};
+
+export const getAllForumThreads = async(req,res) => {
+ try {
+  const threads = await ForumThread.find().populate("author","name email role");
+  res.json(threads);
+ } catch (error) {
+  console.error({error: error.message});
+  res.status(500).json({message: "Faild to fetch the threads"});
+  
+ }
+}
+
+export const getAllArticles = async(req,res) => {
+  try {
+    const articles = await Article.find().populate("author","name email role");
+    res.status(200).json(articles);
+  } catch (error) {
+    res.status(500).json({message: " failed to fetch the articles"});
+  }
+};
+

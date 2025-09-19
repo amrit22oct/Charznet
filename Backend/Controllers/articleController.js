@@ -39,41 +39,39 @@ export const getArticles = async (req, res) => {
 
 // Get single article by ID or slug
 export const getArticleById = async (req, res) => {
-   const { idOrSlug } = req.params;
-   let article = null;
- 
-   try {
-     console.log("Fetching article with:", idOrSlug);
- 
-     if (!idOrSlug) {
-       return res.status(400).json({ message: "No id or slug provided" });
-     }
- 
-     if (mongoose.Types.ObjectId.isValid(idOrSlug)) {
-       console.log("Valid ObjectId, searching by _id");
-       article = await Article.findById(idOrSlug)
-         .populate("author", "name email")
-         .populate("category", "name");
-     }
- 
-     if (!article) {
-       console.log("Searching by slug");
-       article = await Article.findOne({ slug: idOrSlug })
-         .populate("author", "name email")
-         .populate("category", "name");
-     }
- 
-     if (!article) return res.status(404).json({ message: "Article not found" });
- 
-     res.json(article);
-   } catch (err) {
-     console.error("Error fetching article:", err);
-     res.status(500).json({ message: "Server error", error: err.message });
-   }
- };
- 
- 
-// Update article
+  const { idOrSlug } = req.params;
+  let article = null;
+
+  try {
+    console.log("Fetching article with:", idOrSlug);
+
+    if (!idOrSlug) {
+      return res.status(400).json({ message: "No id or slug provided" });
+    }
+
+    if (mongoose.Types.ObjectId.isValid(idOrSlug)) {
+      console.log("Valid ObjectId, searching by _id");
+      article = await Article.findById(idOrSlug)
+        .populate("author", "name email")
+        .populate("category", "name");
+    }
+
+    if (!article) {
+      console.log("Searching by slug");
+      article = await Article.findOne({ slug: idOrSlug })
+        .populate("author", "name email")
+        .populate("category", "name");
+    }
+
+    if (!article) return res.status(404).json({ message: "Article not found" });
+
+    res.json(article);
+  } catch (err) {
+    console.error("Error fetching article:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 // Update article
 export const updateArticle = async (req, res) => {
   const { idOrSlug } = req.params;
@@ -85,7 +83,7 @@ export const updateArticle = async (req, res) => {
 
   if (
     article.author.toString() !== req.user._id.toString() &&
-    req.user.role !== "admin"
+    req.user.role !== "superadmin"
   ) {
     return res.status(401).json({ message: "Not authorized" });
   }
@@ -106,7 +104,7 @@ export const deleteArticle = async (req, res) => {
 
   if (
     article.author.toString() !== req.user._id.toString() &&
-    req.user.role !== "admin"
+    req.user.role !== "superadmin"
   ) {
     return res.status(401).json({ message: "Not authorized" });
   }
@@ -117,30 +115,29 @@ export const deleteArticle = async (req, res) => {
 
 //like and unlike the article
 
-export const toggleLikeArticle = async(req,res) => {
+export const toggleLikeArticle = async (req, res) => {
   try {
     const article = await Article.findById(req.params.id);
-    if(!article) return res.status(404).json({message: "Article not found"});
+    if (!article) return res.status(404).json({ message: "Article not found" });
 
     const userId = req.user._id;
     const alreadyLiked = article.likes.includes(userId);
 
-    if(alreadyLiked){
+    if (alreadyLiked) {
       article.likes.pull(userId);
     } else {
       article.likes.push(userId);
 
       await article.save();
-      res.json({likes: article.likes.length, liked: !alreadyLiked});
+      res.json({ likes: article.likes.length, liked: !alreadyLiked });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({message: "Server Error"});
-    
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
-//adding the comment in the article 
+//adding the comment in the article
 export const addComment = async (req, res) => {
   try {
     const { text } = req.body;
@@ -151,7 +148,7 @@ export const addComment = async (req, res) => {
 
     const comment = await Comment.create({
       text,
-      author: req.user._id,   
+      author: req.user._id,
       article: req.params.id,
     });
 
@@ -162,17 +159,17 @@ export const addComment = async (req, res) => {
   }
 };
 
-
 // get comment for the articles
 
-export const getComments = async (req,res) => {
+export const getComments = async (req, res) => {
   try {
-    const comments = await Comment.find({ article: req.params.id }).populate("author", "name email").sort({ createdAt:-1 });
+    const comments = await Comment.find({ article: req.params.id })
+      .populate("author", "name email")
+      .sort({ createdAt: -1 });
 
-    res.json(comments)
+    res.json(comments);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message:"Server Error"})
-    
+    res.status(500).json({ message: "Server Error" });
   }
 };

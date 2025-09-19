@@ -102,7 +102,7 @@ const Hero = () => {
         <motion.img
           src={
             type === "article"
-              ? content.image || "https://placehold.co/600x400?text=No+Image"
+              ? content.image || "https://placehold.co/600x600?text=No+Image+available"
               : getImageUrl(content.image)
           }
           alt={content.title}
