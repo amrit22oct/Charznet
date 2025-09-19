@@ -79,9 +79,9 @@ const ContentSection = ({ type, data, user, setData, view, users = [] }) => {
                   key={item._id}
                   className="border-t hover:bg-gray-50 transition cursor-default"
                 >
-                  <td className="p-3 w-1/3">{item.title || item.content?.slice(0, 30)}</td>
-                  <td className="p-3 pl-5 text-center w-1/3">{getAuthorName(item)}</td>
-                  <td className="p-3 pl-10  w-3/3 flex gap-3  justify-center">
+                  <td className="p-3 pl-5 w-1/3">{item.title || item.content?.slice(0, 30)}</td>
+                  <td className="p-3 pl-10 text-center w-1/3">{getAuthorName(item)}</td>
+                  <td className="p-3 pl-45  w-3/3 flex gap-3  justify-center">
                     <button
                       onClick={() => handleEdit(item._id)}
                       className="px-3 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500 transition cursor-pointer"
@@ -112,19 +112,20 @@ const ContentSection = ({ type, data, user, setData, view, users = [] }) => {
 
   // Grid view
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 h-full overflow-auto scrollbar-hide">
-      {data.map((item) => (
-        <ContentEditor
-          key={item._id}
-          item={item}
-          canEdit={canEdit(item)}
-          onDelete={() => handleDelete(item._id)}
-          onEdit={() => handleEdit(item._id)}
-          authorName={getAuthorName(item)}
-          onView={() => handleView(item._id)}
-        />
-      ))}
-    </div>
+    <div className="grid grid-cols-1 p-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3">
+  {data.map((item) => (
+    <ContentEditor
+      key={item._id}
+      item={item}
+      canEdit={canEdit(item)}
+      onEdit={() => handleEdit(item._id)}
+      onDelete={() => handleDelete(item._id)}
+      onView={() => handleView(item._id)}
+      authorName={getAuthorName(item)}
+    />
+  ))}
+</div>
+
   );
 };
 
