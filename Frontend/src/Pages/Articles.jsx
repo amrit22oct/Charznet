@@ -39,9 +39,10 @@ const Articles = () => {
   };
 
   const getImageSrc = (article) =>
-    brokenImages[article._id] || !article.image?.trim()
-      ? DEFAULT_IMAGE
-      : article.image;
+  brokenImages[article._id] || !article.image?.trim()
+    ? DEFAULT_IMAGE
+    : `${API.defaults.baseURL}${article.image}`;
+
 
   const getImageClass = (article) =>
     brokenImages[article._id] || !article.image?.trim()

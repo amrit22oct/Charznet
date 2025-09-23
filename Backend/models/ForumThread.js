@@ -13,7 +13,7 @@ const forumThreadSchema = mongoose.Schema(
 
 
 // ForumThread
-forumThreadSchema.index({ title: "text", });
+forumThreadSchema.index({ title: "text", content: "text",  });
 
 
 export default mongoose.model("ForumThread", forumThreadSchema);

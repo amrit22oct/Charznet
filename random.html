@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Stylish Website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Particle Background */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(30px) rotate(240deg); }
+        }
+        
+        /* Dynamic Gradient Background */
+        .dynamic-bg {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 3D Card Effects */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+        
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(10deg) translateZ(20px);
+        }
+        
+        /* Neon Glow */
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            animation: neonPulse 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes neonPulse {
+            from { box-shadow: 0 0 20px rgba(102, 126, 234, 0.5); }
+            to { box-shadow: 0 0 40px rgba(102, 126, 234, 0.8), 0 0 60px rgba(102, 126, 234, 0.4); }
+        }
+        
+        /* Typewriter Effect */
+        .typewriter {
+            overflow: hidden;
+            border-right: 3px solid rgba(255, 255, 255, 0.75);
+            white-space: nowrap;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: rgba(255, 255, 255, 0.75); }
+        }
+        
+        /* Morphing Shapes */
+        .morphing-shape {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: morph 8s ease-in-out infinite;
+        }
+        
+        @keyframes morph {
+            0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+            100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        }
+        
+        /* Parallax */
+        .parallax {
+            transform: translateZ(0);
+            transition: transform 0.1s ease-out;
+        }
+        
+        /* Advanced Hover Effects */
+        .magnetic {
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+        
+        .magnetic:hover {
+            transform: scale(1.1) translateY(-5px);
+        }
+        
+        /* Ripple Effect */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ripple::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .ripple:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* Skill Bar Animation */
+        .skill-bar {
+            width: 0%;
+            transition: width 2s ease-in-out;
+        }
+        
+        .skill-bar.animate {
+            width: var(--skill-width);
+        }
+        
+        /* Floating Elements */
+        .float-1 { animation: float1 6s ease-in-out infinite; }
+        .float-2 { animation: float2 8s ease-in-out infinite; }
+        .float-3 { animation: float3 10s ease-in-out infinite; }
+        
+        @keyframes float1 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        @keyframes float2 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(-180deg); }
+        }
+        
+        @keyframes float3 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(360deg); }
+        }
+        
+        /* Scroll Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+        
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+        
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* Counter Animation */
+        .counter {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+        
+        /* Loading Animation */
+        .loading-dots {
+            display: inline-block;
+        }
+        
+        .loading-dots::after {
+            content: '';
+            animation: dots 2s infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 glass transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 dynamic-bg rounded-xl flex items-center justify-center mr-3 morphing-shape">
+                        <span class="text-white font-bold text-lg">S</span>
+                    </div>
+                    <span class="text-xl font-bold text-white">Stylish</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-white/80 hover:text-white transition-all duration-300 relative group">
+                        Home
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#about" class="text-white/80 hover:text-white transition-all duration-300 relative group">
+                        About
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#services" class="text-white/80 hover:text-white transition-all duration-300 relative group">
+                        Services
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#portfolio" class="text-white/80 hover:text-white transition-all duration-300 relative group">
+                        Portfolio
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#contact" class="text-white/80 hover:text-white transition-all duration-300 relative group">
+                        Contact
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                </div>
+                
+                <button class="magnetic ripple bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full font-medium neon-glow">
+                    Get Started
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen dynamic-bg relative overflow-hidden flex items-center">
+        <div class="particles" id="particles"></div>
+        
+        <!-- Floating Shapes -->
+        <div class="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full float-1"></div>
+        <div class="absolute top-40 right-20 w-16 h-16 bg-purple-400/20 rounded-full float-2"></div>
+        <div class="absolute bottom-40 left-20 w-24 h-24 bg-pink-400/20 rounded-full float-3"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center">
+                <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+                    <span class="typewriter">Create Magic</span>
+                    <br>
+                    <span class="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+                        With Code
+                    </span>
+                </h1>
+                <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed reveal">
+                    Transform your wildest ideas into stunning digital experiences with cutting-edge design and revolutionary technology.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center reveal">
+                    <button class="magnetic ripple glass text-white px-10 py-4 rounded-full font-semibold text-lg neon-glow">
+                        🚀 Explore Universe
+                    </button>
+                    <button class="magnetic border-2 border-white/30 text-white px-10 py-4 rounded-full font-semibold text-lg glass hover:bg-white/10 transition-all duration-300">
+                        ✨ See Magic
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dynamic Features Section -->
+    <section class="py-20 bg-gray-900 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                    <span class="bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
+                        Incredible Features
+                    </span>
+                </h2>
+                <p class="text-gray-400 text-xl max-w-3xl mx-auto">Experience the future of web development with our revolutionary features</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-3d glass p-8 rounded-3xl reveal-left">
+                    <div class="w-20 h-20 dynamic-bg rounded-2xl flex items-center justify-center mb-6 morphing-shape">
+                        <span class="text-3xl">⚡</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Lightning Speed</h3>
+                    <p class="text-gray-400 leading-relaxed">Experience blazing fast performance with our optimized architecture and cutting-edge technology stack.</p>
+                    <div class="mt-6">
+                        <div class="text-sm text-gray-500 mb-2">Performance Score</div>
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="skill-bar bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full" style="--skill-width: 98%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-3d glass p-8 rounded-3xl reveal">
+                    <div class="w-20 h-20 dynamic-bg rounded-2xl flex items-center justify-center mb-6 morphing-shape">
+                        <span class="text-3xl">🎨</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Beautiful Design</h3>
+                    <p class="text-gray-400 leading-relaxed">Stunning visual experiences that captivate users and create lasting impressions with every interaction.</p>
+                    <div class="mt-6">
+                        <div class="text-sm text-gray-500 mb-2">Design Quality</div>
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="skill-bar bg-gradient-to-r from-purple-400 to-pink-500 h-2 rounded-full" style="--skill-width: 95%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-3d glass p-8 rounded-3xl reveal-right">
+                    <div class="w-20 h-20 dynamic-bg rounded-2xl flex items-center justify-center mb-6 morphing-shape">
+                        <span class="text-3xl">🔒</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Ultra Secure</h3>
+                    <p class="text-gray-400 leading-relaxed">Enterprise-grade security with advanced encryption and protection against modern cyber threats.</p>
+                    <div class="mt-6">
+                        <div class="text-sm text-gray-500 mb-2">Security Level</div>
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="skill-bar bg-gradient-to-r from-red-400 to-yellow-500 h-2 rounded-full" style="--skill-width: 99%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Portfolio Carousel -->
+    <section class="py-20 dynamic-bg relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl md:text-6xl font-bold text-white mb-6">Our Masterpieces</h2>
+                <p class="text-white/80 text-xl max-w-3xl mx-auto">Discover our portfolio of revolutionary digital experiences</p>
+            </div>
+            
+            <div class="relative">
+                <div class="carousel-container glass rounded-3xl overflow-hidden" id="portfolio-carousel">
+                    <div class="carousel-track flex transition-transform duration-700 ease-in-out" id="carousel-track">
+                        <!-- Slide 1 -->
+                        <div class="carousel-slide min-w-full p-12 text-center">
+                            <div class="max-w-2xl mx-auto">
+                                <div class="w-32 h-32 dynamic-bg rounded-full mx-auto mb-8 morphing-shape flex items-center justify-center">
+                                    <span class="text-4xl">🚀</span>
+                                </div>
+                                <h3 class="text-3xl font-bold text-white mb-6">Space Commerce Platform</h3>
+                                <p class="text-white/80 text-lg mb-8">Revolutionary e-commerce platform with AI-powered recommendations and immersive 3D product visualization.</p>
+                                <div class="flex justify-center space-x-6">
+                                    <div class="glass p-4 rounded-2xl">
+                                        <span class="text-2xl">🛒</span>
+                                        <div class="text-sm text-white/70 mt-2">Smart Cart</div>
+                                    </div>
+                                    <div class="glass p-4 rounded-2xl">
+                                        <span class="text-2xl">🤖</span>
+                                        <div class="text-sm text-white/70 mt-2">AI Assistant</div>
+                                    </div>
+                                    <div class="glass p-4 rounded-2xl">
+                                        <span class="text-2xl">📱</span>
+                                        <div class="text-sm text-white/70 mt-2">Mobile First</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slide 2 -->
+                        <div class="carousel-slide min-w-full p-12 text-center">
+                            <div class="max-w-2xl mx-auto">
+                                <div class="w-32 h-32 dynamic-bg rounded-full mx-auto mb-8 morphing-shape flex items-center justify-center">
+                                    <span class="text-4xl">🏥</span>
+                                </div>
+                                <h3 class="text-3xl font-bold text-white mb-6">HealthTech Dashboard</h3>
+                                <p class="text-white/80 text-lg mb-8">Next-generation healthcare management system with real-time patient monitoring and predictive analytics.</p>
+                                <div class="flex justify-center space-x-6">
+                                    <div class="glass p-4 rounded-2xl">
+                                        <span class="text-2xl">📊</span>
+                                        <div class="text-sm text-white/70 mt-2">Analytics</div>
+                                    </div>
+                                    <div class="glass p-4 rounded-2xl">
+                                        <span class="text-2xl">💊</span>
+                                        <div class="text-sm text-white/70 mt-2">Medicine</div>
+                                    </div>
+                                    <div class="glass p-4 rounded-2xl">
+                                        <span class="text-2xl">👨‍⚕️</span>
+                                        <div class="text-sm text-white/70 mt-2">Doctors</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slide 3 -->
+                        <div class="carousel-slide min-w-full p-12 text-center">
+                            <div class="max-w-2xl mx-auto">
+                                <div class="w-32 h-32 dynamic-bg rounded-full mx-auto mb-8 morphing-shape flex items-center justify-center">
+                                    <span class="text-4xl">🌐</span>
+                                </div>
+                                <h3 class="text-3xl font-bold text-white mb-6">Social Universe</h3>
+                                <p class="text-white/80 text-lg mb-8">Immersive social platform with virtual reality integration and blockchain-powered digital assets.</p>
+                                <div class="flex justify-center space-x-6">
+                                    <div class="glass p-4 rounded-2xl">
+                                        <span class="text-2xl">💬</span>
+                                        <div class="text-sm text-white/70 mt-2">Chat</div>
+                                    </div>
+                                    <div class="glass p-4 rounded-2xl">
+                                        <span class="text-2xl">🥽</span>
+                                        <div class="text-sm text-white/70 mt-2">VR Ready</div>
+                                    </div>
+                                    <div class="glass p-4 rounded-2xl">
+                                        <span class="text-2xl">🪙</span>
+                                        <div class="text-sm text-white/70 mt-2">Blockchain</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carousel Controls -->
+                <div class="flex justify-center mt-8 space-x-4">
+                    <button id="prev-btn" class="magnetic glass p-4 rounded-full text-white hover:bg-white/20 transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <button id="next-btn" class="magnetic glass p-4 rounded-full text-white hover:bg-white/20 transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Carousel Indicators -->
+                <div class="flex justify-center mt-6 space-x-3">
+                    <button class="carousel-indicator w-4 h-4 glass rounded-full transition-all duration-300" data-slide="0"></button>
+                    <button class="carousel-indicator w-4 h-4 glass rounded-full transition-all duration-300" data-slide="1"></button>
+                    <button class="carousel-indicator w-4 h-4 glass rounded-full transition-all duration-300" data-slide="2"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Animated Stats -->
+    <section class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 text-center">
+                <div class="reveal-left">
+                    <div class="counter text-5xl font-black text-white mb-2" data-target="1000">0</div>
+                    <div class="text-gray-400 text-lg">Projects Launched</div>
+                    <div class="w-16 h-1 dynamic-bg mx-auto mt-4 rounded-full"></div>
+                </div>
+                <div class="reveal-left" style="animation-delay: 0.1s;">
+                    <div class="counter text-5xl font-black text-white mb-2" data-target="99">0</div>
+                    <div class="text-gray-400 text-lg">Client Satisfaction</div>
+                    <div class="w-16 h-1 dynamic-bg mx-auto mt-4 rounded-full"></div>
+                </div>
+                <div class="reveal-left" style="animation-delay: 0.2s;">
+                    <div class="counter text-5xl font-black text-white mb-2" data-target="24">0</div>
+                    <div class="text-gray-400 text-lg">Hours Support</div>
+                    <div class="w-16 h-1 dynamic-bg mx-auto mt-4 rounded-full"></div>
+                </div>
+                <div class="reveal-left" style="animation-delay: 0.3s;">
+                    <div class="counter text-5xl font-black text-white mb-2" data-target="10">0</div>
+                    <div class="text-gray-400 text-lg">Years Experience</div>
+                    <div class="w-16 h-1 dynamic-bg mx-auto mt-4 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 dynamic-bg relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl md:text-6xl font-bold text-white mb-6">What People Say</h2>
+                <p class="text-white/80 text-xl">Hear from our amazing clients</p>
+            </div>
+            
+            <div class="testimonial-container glass rounded-3xl p-8 text-center" id="testimonials">
+                <div class="testimonial-track">
+                    <div class="testimonial active">
+                        <div class="w-20 h-20 dynamic-bg rounded-full mx-auto mb-6 morphing-shape flex items-center justify-center">
+                            <span class="text-2xl">👨‍💼</span>
+                        </div>
+                        <p class="text-white text-xl mb-6 italic">"Absolutely incredible work! They transformed our vision into reality with stunning animations and perfect functionality."</p>
+                        <h4 class="text-white font-bold text-lg">Alex Johnson</h4>
+                        <p class="text-white/70">CEO, TechCorp</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gray-900">
+        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 reveal">
+            <h2 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                Ready to Create
+                <span class="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">Magic?</span>
+            </h2>
+            <p class="text-gray-400 text-xl mb-8">Join thousands of visionaries who have transformed their digital presence</p>
+            <button class="magnetic ripple dynamic-bg text-white px-12 py-4 rounded-full text-xl font-bold neon-glow">
+                🚀 Start Your Journey
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="reveal-left">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 dynamic-bg rounded-xl flex items-center justify-center mr-4 morphing-shape">
+                            <span class="text-white font-bold text-xl">S</span>
+                        </div>
+                        <span class="text-2xl font-bold">Stylish</span>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed">Creating magical digital experiences that inspire and transform the future of web development.</p>
+                </div>
+                <div class="reveal">
+                    <h4 class="font-bold mb-6 text-lg">Services</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Web Design</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Development</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Animation</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Consulting</a></li>
+                    </ul>
+                </div>
+                <div class="reveal">
+                    <h4 class="font-bold mb-6 text-lg">Company</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Our Team</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="reveal-right">
+                    <h4 class="font-bold mb-6 text-lg">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="magnetic w-12 h-12 glass rounded-full flex items-center justify-center hover:bg-purple-600 transition-colors">
+                            <span class="text-lg">📧</span>
+                        </a>
+                        <a href="#" class="magnetic w-12 h-12 glass rounded-full flex items-center justify-center hover:bg-purple-600 transition-colors">
+                            <span class="text-lg">📱</span>
+                        </a>
+                        <a href="#" class="magnetic w-12 h-12 glass rounded-full flex items-center justify-center hover:bg-purple-600 transition-colors">
+                            <span class="text-lg">🌐</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Stylish. All rights reserved. Made with ❤️ and lots of ☕</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Particle System
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Mouse interaction with particles
+        document.addEventListener('mousemove', (e) => {
+            const particles = document.querySelectorAll('.particle');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            particles.forEach((particle, index) => {
+                const speed = (index % 5 + 1) * 0.5;
+                const x = (mouseX - 0.5) * speed;
+                const y = (mouseY - 0.5) * speed;
+                particle.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+        
+        // Scroll reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Animate skill bars
+                    const skillBars = entry.target.querySelectorAll('.skill-bar');
+                    skillBars.forEach(bar => {
+                        setTimeout(() => {
+                            bar.classList.add('animate');
+                        }, 500);
+                    });
+                    
+                    // Animate counters
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                        animateCounter(counter);
+                    });
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all reveal elements
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Counter animation
+        function animateCounter(counter) {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                counter.textContent = Math.floor(current) + (target === 99 ? '%' : target === 24 ? '/7' : '+');
+            }, 16);
+        }
+        
+        // Carousel functionality
+        const carouselTrack = document.getElementById('carousel-track');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        
+        let currentSlide = 0;
+        const totalSlides = 3;
+        let autoPlayInterval;
+        
+        function updateCarousel() {
+            const translateX = -currentSlide * 100;
+            carouselTrack.style.transform = `translateX(${translateX}%)`;
+            
+            indicators.forEach((indicator, index) => {
+                if (index === currentSlide) {
+                    indicator.style.background = 'rgba(255, 255, 255, 0.8)';
+                } else {
+                    indicator.style.background = 'rgba(255, 255, 255, 0.3)';
+                }
+            });
+        }
+        
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+        
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+        
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateCarousel();
+        }
+        
+        function startAutoPlay() {
+            autoPlayInterval = setInterval(nextSlide, 4000);
+        }
+        
+        function stopAutoPlay() {
+            clearInterval(autoPlayInterval);
+        }
+        
+        // Event listeners
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            stopAutoPlay();
+            setTimeout(startAutoPlay, 2000);
+        });
+        
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            stopAutoPlay();
+            setTimeout(startAutoPlay, 2000);
+        });
+        
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                goToSlide(index);
+                stopAutoPlay();
+                setTimeout(startAutoPlay, 2000);
+            });
+        });
+        
+        // Pause on hover
+        document.getElementById('portfolio-carousel').addEventListener('mouseenter', stopAutoPlay);
+        document.getElementById('portfolio-carousel').addEventListener('mouseleave', startAutoPlay);
+        
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(0, 0, 0, 0.8)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+        
+        // Magnetic effect for buttons
+        document.querySelectorAll('.magnetic').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                btn.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px) scale(1.05)`;
+            });
+            
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'translate(0px, 0px) scale(1)';
+            });
+        });
+        
+        // Initialize
+        createParticles();
+        updateCarousel();
+        startAutoPlay();
+        
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 1s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'981f8b14275c794d',t:'MTc1ODM1MjY0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

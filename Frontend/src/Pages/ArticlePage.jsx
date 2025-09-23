@@ -44,7 +44,15 @@ const ArticlePage = () => {
     if (page < totalPages) setPage((prev) => prev + 1);
   };
 
-  const getImageSrc = (src) => (src && src.trim() ? src : DEFAULT_IMAGE);
+  // Prepend baseURL to relative image paths
+  const getImageSrc = (src) => {
+    if (!src || !src.trim()) return DEFAULT_IMAGE;
+    // If src already has full URL (starts with http), return it
+    if (src.startsWith("http")) return src;
+    // Otherwise, prepend baseURL
+    return `${API.defaults.baseURL}${src}`;
+  };
+
   const handleImageError = (e) => {
     e.currentTarget.src = DEFAULT_IMAGE;
   };
@@ -103,19 +111,16 @@ const ArticlePage = () => {
 
       {/* Pagination */}
       <div className="flex justify-center gap-4 mt-8">
-  <Button onClick={handlePrev} disabled={page === 1}>
-    Prev
-  </Button>
-
-  <span className="flex items-center text-gray-700 font-semibold">
-    Page {page} of {totalPages}
-  </span>
-
-  <Button onClick={handleNext} disabled={page === totalPages}>
-    Next
-  </Button>
-</div>
-
+        <Button onClick={handlePrev} disabled={page === 1}>
+          Prev
+        </Button>
+        <span className="flex items-center text-gray-700 font-semibold">
+          Page {page} of {totalPages}
+        </span>
+        <Button onClick={handleNext} disabled={page === totalPages}>
+          Next
+        </Button>
+      </div>
     </section>
   );
 };

@@ -15,7 +15,7 @@ const blogSchema = mongoose.Schema(
 );
 
 // Blog
-blogSchema.index({ title: "text",  tags: "text" });
+blogSchema.index({ title: "text", content: "text", summary: "text", tags: "text" });
 
 
 

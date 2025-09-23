@@ -25,7 +25,7 @@ articleSchema.pre("save", function (next) {
 });
 
 // Article
-articleSchema.index({ title: "text",  tags: "text" });
+articleSchema.index({ title: "text",  content: "text",  tags: "text" });
 
 
 

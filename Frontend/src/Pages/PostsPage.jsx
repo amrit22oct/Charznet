@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import CreateBlogPost from "../Components/CreateBlogPost";
 import CreateForumPost from "../Components/CreateForumPost";
+import CreateArticlePost from "../Components/CreateArticlePost";
 import Api from "../api";
 
 const PostsPage = () => {
-  const { type, id } = useParams(); // type = "blogs" | "forum"
+  const { type, id } = useParams(); // type = "blogs" | "forum" | "articles"
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState(type || "blogs");
@@ -24,7 +25,21 @@ const PostsPage = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const endpoint = type === "blogs" ? `/blogs/${id}` : `/threads/${id}`;
+        let endpoint = "";
+
+        switch (type) {
+          case "blogs":
+            endpoint = `/blogs/${id}`;
+            break;
+          case "forum":
+            endpoint = `/threads/${id}`;
+            break;
+          case "articles":
+            endpoint = `/articles/${id}`;
+            break;
+          default:
+            return;
+        }
 
         const res = await Api.get(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
@@ -47,7 +62,13 @@ const PostsPage = () => {
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-8 text-gray-800">
         {id
-          ? `Edit ${currentForm === "blogs" ? "Blog" : "Forum Post"}`
+          ? `Edit ${
+              currentForm === "blogs"
+                ? "Blog"
+                : currentForm === "forum"
+                ? "Forum Post"
+                : "Article"
+            }`
           : "Create Posts"}
       </h1>
 
@@ -74,12 +95,22 @@ const PostsPage = () => {
           >
             Forum
           </button>
+          <button
+            className={`px-4 py-2 rounded-t-lg font-semibold transition ${
+              activeTab === "articles"
+                ? "bg-yellow-500 text-white"
+                : "bg-gray-200 text-gray-700"
+            }`}
+            onClick={() => navigate("/create-posts/articles")}
+          >
+            Article
+          </button>
         </div>
       )}
 
       <div className="bg-white rounded-b-lg shadow-md p-6 min-h-[300px]">
         <AnimatePresence mode="wait">
-          {currentForm === "blogs" ? (
+          {currentForm === "blogs" && (
             <motion.div
               key="blogs"
               initial={{ x: 300, opacity: 0 }}
@@ -89,7 +120,9 @@ const PostsPage = () => {
             >
               <CreateBlogPost editData={editData} onCancel={handleCancel} />
             </motion.div>
-          ) : (
+          )}
+
+          {currentForm === "forum" && (
             <motion.div
               key="forum"
               initial={{ x: 300, opacity: 0 }}
@@ -98,6 +131,18 @@ const PostsPage = () => {
               transition={{ duration: 0.4 }}
             >
               <CreateForumPost editData={editData} onCancel={handleCancel} />
+            </motion.div>
+          )}
+
+          {currentForm === "articles" && (
+            <motion.div
+              key="articles"
+              initial={{ x: 300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -300, opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <CreateArticlePost editData={editData} onCancel={handleCancel} />
             </motion.div>
           )}
         </AnimatePresence>

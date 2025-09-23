@@ -13,7 +13,7 @@ const Hero = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await API.get("/articles?limit=2&page=1"); // fetch up to 2 articles
+        const res = await API.get("/articles?limit=2&page=1");
         return res.data.articles || [];
       } catch (err) {
         console.error("Failed to fetch articles", err);
@@ -23,7 +23,7 @@ const Hero = () => {
 
     const fetchBlogs = async () => {
       try {
-        const res = await API.get("/blogs?limit=2&page=1"); // fetch up to 2 blogs
+        const res = await API.get("/blogs?limit=2&page=1");
         return res.data.blogs || [];
       } catch (err) {
         console.error("Failed to fetch blogs", err);
@@ -37,7 +37,6 @@ const Hero = () => {
         fetchArticles(),
         fetchBlogs(),
       ]);
-
       setArticles(fetchedArticles);
       setBlogs(fetchedBlogs);
       setLoading(false);
@@ -46,9 +45,9 @@ const Hero = () => {
     fetchData();
   }, []);
 
-  const handleCardClick = (type, id) => {
-    if (type === "article") navigate(`/articles/${id}`);
-    if (type === "blog") navigate(`/blogs/${id}`);
+  const handleCardClick = (type, idOrSlug) => {
+    if (type === "article") navigate(`/articles/${idOrSlug}`);
+    if (type === "blog") navigate(`/blogs/${idOrSlug}`);
   };
 
   const SkeletonCard = ({ className }) => (
@@ -61,11 +60,13 @@ const Hero = () => {
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 40 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+
+  // 🔥 Safe image getter for both article & blog
+  const getImageSrc = (type, image) => {
+    if (!image) return "https://placehold.co/600x600?text=No+Image+available";
+    return type === "article" ? getImageUrl(image) : getImageUrl(image);
   };
 
   const renderCard = (content, type, widthClass) => {
@@ -91,7 +92,7 @@ const Hero = () => {
       <motion.div
         key={content._id}
         className={`relative rounded-[24px] overflow-hidden ${widthClass} h-[300px] sm:h-[400px] md:h-[600px] cursor-pointer group`}
-        onClick={() => handleCardClick(type, content._id)}
+        onClick={() => handleCardClick(type, content.slug || content._id)}
         whileHover={{ scale: 1.0 }}
         transition={{ duration: 0.3 }}
         initial="hidden"
@@ -100,11 +101,7 @@ const Hero = () => {
         viewport={{ once: true }}
       >
         <motion.img
-          src={
-            type === "article"
-              ? content.image || "https://placehold.co/600x600?text=No+Image+available"
-              : getImageUrl(content.image)
-          }
+          src={getImageSrc(type, content.image)}
           alt={content.title}
           className="w-full h-full object-cover transform group-hover:scale-105 transition duration-500"
         />
@@ -116,37 +113,28 @@ const Hero = () => {
     );
   };
 
-  // Determine what to show in each container
-  let leftContent = null;
-  let rightContent = null;
+  // Explicitly assign type
+  let leftContent = null, rightContent = null;
+  let leftType = "article", rightType = "blog";
 
   if (articles.length > 0 && blogs.length > 0) {
-    // Both APIs succeeded: left = article, right = blog
     leftContent = articles[0];
     rightContent = blogs[0];
   } else if (articles.length > 0) {
-    // Only articles available: show 2 different articles if possible
     leftContent = articles[0];
     rightContent = articles[1] || articles[0];
+    rightType = "article";
   } else if (blogs.length > 0) {
-    // Only blogs available: show 2 different blogs if possible
     leftContent = blogs[0];
     rightContent = blogs[1] || blogs[0];
+    leftType = rightType = "blog";
   }
 
   return (
     <section className="max-w-[1240px] mx-auto px-4 md:px-8 py-10">
       <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-6">
-        {renderCard(
-          leftContent,
-          leftContent && articles.includes(leftContent) ? "article" : "blog",
-          "w-full md:w-[670px]"
-        )}
-        {renderCard(
-          rightContent,
-          rightContent && articles.includes(rightContent) ? "article" : "blog",
-          "w-full md:w-[546px]"
-        )}
+        {renderCard(leftContent, leftType, "w-full md:w-[670px]")}
+        {renderCard(rightContent, rightType, "w-full md:w-[546px]")}
       </div>
     </section>
   );

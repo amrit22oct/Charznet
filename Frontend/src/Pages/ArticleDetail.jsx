@@ -34,13 +34,7 @@ const ArticleDetail = () => {
         const data = res.data;
         setArticle(data);
         setLikesCount(data.likes?.length || 0);
-  
-        // Correctly check if the user already liked
-        if (userId) {
-          setLiked(data.likes?.some(like => String(like) === String(userId)));
-        } else {
-          setLiked(false);
-        }
+        setLiked(userId ? data.likes?.some(like => String(like) === String(userId)) : false);
       } catch (err) {
         console.error(err);
         setError("Article not found");
@@ -52,7 +46,6 @@ const ArticleDetail = () => {
   
     fetchArticle();
   }, [id, userId]);
-  
 
   // Fetch comments
   useEffect(() => {
@@ -84,8 +77,6 @@ const ArticleDetail = () => {
         { text: newComment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      // Update UI with new comment
       setComments(prev => [res.data, ...prev]);
       setNewComment("");
     } catch (err) {
@@ -102,19 +93,24 @@ const ArticleDetail = () => {
     setLikesCount(prevLiked ? likesCount - 1 : likesCount + 1);
 
     try {
-      const res = await API.post(`/articles/${id}/like`);
+      const res = await API.post(`/articles/${id}/like`, null, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setLikesCount(res.data.likes);
       setLiked(res.data.liked);
     } catch (err) {
       console.error(err);
-      // revert
       setLiked(prevLiked);
       setLikesCount(prevLiked ? likesCount + 1 : likesCount - 1);
     }
   };
-  
 
-  const getImageSrc = (src) => (src && src.trim() ? src : DEFAULT_IMAGE);
+  // Image helpers
+  const getImageSrc = (src) => {
+    if (!src || !src.trim()) return DEFAULT_IMAGE;
+    if (src.startsWith("http")) return src;
+    return `${API.defaults.baseURL}${src}`;
+  };
   const handleImageError = (e) => { e.currentTarget.src = DEFAULT_IMAGE; };
   const getImageClass = (src) => getImageSrc(src) === DEFAULT_IMAGE ? "object-contain bg-black" : "object-cover";
 
@@ -130,9 +126,7 @@ const ArticleDetail = () => {
         ← Back
       </button>
 
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mt-4">
-        {article?.title || "Untitled"}
-      </h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mt-4">{article?.title || "Untitled"}</h1>
 
       <p className="text-gray-500 text-sm mt-2">
         By {article?.author?.name || "Unknown"} •{" "}
@@ -159,8 +153,15 @@ const ArticleDetail = () => {
       </div>
 
       <div className="prose max-w-none">
-        {article?.content ? <p>{article.content}</p> : <p>No content available.</p>}
-      </div>
+  {article?.content ? (
+    <div
+      dangerouslySetInnerHTML={{ __html: article.content }}
+    />
+  ) : (
+    <p>No content available.</p>
+  )}
+</div>
+
 
       {article?.tags?.length > 0 && (
         <div className="mt-6">

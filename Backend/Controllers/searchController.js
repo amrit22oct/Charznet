@@ -4,16 +4,13 @@ import ForumThread from "../models/ForumThread.js";
 
 export const searchAll = async (req, res) => {
   try {
-    const { q, limit = 20, skip = 0, type } = req.query;
+    let { q, limit = 20, skip = 0, type } = req.query;
 
     if (!q || q.trim() === "") {
       return res.status(400).json({ error: "Search query (q) is required" });
     }
 
-    const searchQuery = { $text: { $search: q } };
-    const projection = { score: { $meta: "textScore" } };
-
-    // Ensure numeric values for pagination
+    q = q.trim();
     const limitNum = Math.min(Math.max(Number(limit), 1), 100); // cap at 100
     const skipNum = Math.max(Number(skip), 0);
 
@@ -23,35 +20,62 @@ export const searchAll = async (req, res) => {
       forum: ForumThread,
     };
 
-    // Helper to run text search on a model
-    const runSearch = async (model, type) => {
-      const results = await model
-        .find(searchQuery, projection)
-        .sort({ score: { $meta: "textScore" } })
-        .skip(skipNum)
-        .limit(limitNum)
-        
+    // Handle "all" type or undefined: search all models
+    const searchTypes = type === "all" || !type ? Object.keys(modelMap) : [type];
 
-      return results.map((r) => ({
-        ...r,
-        _type: type,
-        _score: r.score,
-      }));
+    // Validate types
+    for (let t of searchTypes) {
+      if (!modelMap[t]) {
+        return res.status(400).json({ error: `Invalid type: ${t}` });
+      }
+    }
+
+    const runSearch = async (model, type) => {
+      try {
+        // First try MongoDB text search
+        const projection = { score: { $meta: "textScore" } };
+        let results = await model
+          .find({ $text: { $search: q } }, projection)
+          .sort({ score: { $meta: "textScore" } });
+
+        // Fallback to regex if no results
+        if (!results || results.length === 0) {
+          const regexQuery = {
+            $or: [
+              { title: { $regex: q, $options: "i" } },
+              { content: { $regex: q, $options: "i" } },
+              { summary: { $regex: q, $options: "i" } },
+              { tags: { $regex: q, $options: "i" } },
+            ],
+          };
+          results = await model.find(regexQuery);
+        }
+
+        return results.map((r) => ({
+          ...r.toObject(),
+          _type: type,
+          _score: r.score || 0,
+        }));
+      } catch (err) {
+        console.error(`Search failed for type ${type}:`, err);
+        return [];
+      }
     };
 
-    const searchTypes = type ? [type] : Object.keys(modelMap);
-
+    // Run all searches concurrently
     const results = await Promise.all(
       searchTypes.map((t) => runSearch(modelMap[t], t))
     );
 
+    // Flatten and sort globally
     let allResults = results.flat();
-
-    // Global sort by score, then by createdAt
     allResults.sort((a, b) => {
       if (b._score !== a._score) return b._score - a._score;
       return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
     });
+
+    // Apply global pagination
+    const paginatedResults = allResults.slice(skipNum, skipNum + limitNum);
 
     res.json({
       query: q,
@@ -59,7 +83,7 @@ export const searchAll = async (req, res) => {
       skip: skipNum,
       limit: limitNum,
       totalCount: allResults.length,
-      results: allResults,
+      results: paginatedResults,
     });
   } catch (error) {
     console.error("Search error:", error);
