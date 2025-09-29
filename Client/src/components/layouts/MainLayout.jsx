@@ -1,4 +1,3 @@
-// src/components/layouts/MainLayout.jsx
 import React from 'react';
 import Navbar from '../organisms/Navbar';
 import Footer from '../organisms/Footer';
@@ -8,15 +7,20 @@ import BoxComponnt from '../organisms/BoxComponnt';
 
 const MainLayout = ({ children }) => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div className="flex flex-col min-h-screen">
+      {/* Top bar always on top */}
       <TopBar />
       <ContactBar />
       <BoxComponnt />
+
+      {/* Navbar below TopBar */}
       <Navbar />
-      
-      <main className=''>
+
+      {/* Main content */}
+      <main className="flex-1">
         {children}
       </main>
+
       <Footer />
     </div>
   );

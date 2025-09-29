@@ -18,7 +18,7 @@ const BoxComponent = () => {
       {/* Draggable Overlay Box */}
       <motion.div
         className="relative z-10 w-[90%] max-w-[850px] h-[40%] max-h-[300px] bg-black/50 flex items-center justify-center flex-col rounded-lg cursor-grab"
-        drag
+        
         dragConstraints={constraintsRef}
         dragElastic={0.3}
         dragMomentum={false}

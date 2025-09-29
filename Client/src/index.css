@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+/* For vertical scrolling */
+
+ 
+ body::-webkit-scrollbar {
+   display: none; /* Chrome, Safari */
+ }
+ 

@@ -6,7 +6,7 @@ import { navLinks } from "../../constants/navlinks";
 
 const TopBar = () => {
   return (
-    <nav className="flex items-center justify-between w-full h-14 px-4 sm:px-6 md:px-10 py-2 shadow-md bg-gray-400 sticky top-0 z-50">
+    <nav className="flex items-center justify-between w-full h-14 px-4 sm:px-6 md:px-10 shadow-md bg-gray-400 sticky top-0 z-50">
       {/* Left: Logo */}
       <Link to="/" className="inline-flex">
         <Logo />
