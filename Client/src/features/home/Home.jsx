@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import CardComponent from "../../components/organisms/CardComponent";
 import ArticleList from "../../components/organisms/ArticleList";
+import ArticleCard from "../../components/organisms/ArticleCard";
 import ContentSection from "../../components/organisms/ContentSection";
 
 const Home = () => {
@@ -57,7 +58,7 @@ const Home = () => {
   // Animate X position continuously
   useEffect(() => {
     let animationFrame;
-    const speed = 1;
+    const speed = 4;
 
     const animate = () => {
       if (!isPaused && totalWidth > 0) {
@@ -104,7 +105,6 @@ const Home = () => {
         </motion.div>
       </div>
 
-      
       <motion.div style={{ y: headerYSmooth }} className="relative z-20">
         <div className="h-16 bg-gray-200 flex items-center justify-center text-xl font-bold shadow-md">
           <span className="overflow-hidden whitespace-nowrap border-r-2 border-black pr-2">
@@ -112,11 +112,16 @@ const Home = () => {
           </span>
         </div>
 
-        
-
         <ContentSection />
+        <div className=" bg-gray100 px-4 sm:px-8 lg:px-16 flex justify-center items-center">
+          <h2 className="text-5xl  mt-10 font-bold mb-6">Latest Articles</h2>
+         
+        </div>
       </motion.div>
+
+      
     </div>
+
   );
 };
 

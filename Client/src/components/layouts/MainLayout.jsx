@@ -10,7 +10,7 @@ const MainLayout = ({ children }) => {
     <div className="flex flex-col min-h-screen">
       {/* Top bar always on top */}
       <TopBar />
-      <ContactBar />
+      <ContactBar  />
       <BoxComponnt />
 
       {/* Navbar below TopBar */}

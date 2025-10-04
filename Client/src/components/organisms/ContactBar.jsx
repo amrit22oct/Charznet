@@ -3,7 +3,7 @@ import Icon from "../atoms/Icon"; // Assuming your Icon component is ready
 
 const ContactBar = () => {
   return (
-    <div className="hidden sm:flex flex-wrap items-center justify-between bg-gray-500 h-13 w-full px-8">
+    <div className="hidden sm:flex flex-wrap items-center justify-between bg-gray-500 h-16  w-full px-8">
       
       {/* Left: Contact Info */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
