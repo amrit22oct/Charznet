@@ -13,25 +13,34 @@ const cardImages = [
 
 const BrandCarousel = () => {
   return (
-    <div className="w-full bg-gray-50 py-12 shadow-lg">
+    <div className="w-full bg-gray-100 py-12">
       {/* Card container */}
       <div className="flex flex-wrap justify-center gap-6 sm:gap-8 items-center">
         {cardImages.map((image, index) => (
           <div
             key={index}
             className="relative group w-36 h-24 sm:w-44 sm:h-28 md:w-56 md:h-36 
-                       rounded-xl overflow-hidden shadow-lg 
-                       transition-all duration-300 transform hover:scale-105 cursor-pointer"
+                       rounded-xl overflow-hidden shadow-md hover:shadow-xl 
+                       transition-all duration-300 transform cursor-pointer"
           >
             <CardImage bgImage={image} />
-            {/* Brightness overlay */}
-            <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-all duration-300" />
+            {/* Dark overlay initially */}
+            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all duration-300 rounded-xl" />
+            {/* Brightness filter on hover */}
+            <div className="absolute inset-0 rounded-xl transition-all duration-300 group-hover:brightness-200" />
           </div>
         ))}
       </div>
 
-      {/* Follow text */}
-      
+      {/* Description below carousel */}
+      <div className="mt-8 text-center">
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-700">
+          Our Trusted Partners
+        </h3>
+        <p className="text-sm sm:text-base text-gray-500 mt-2 max-w-xl mx-auto">
+          We collaborate with leading brands to bring you the best products and services.
+        </p>
+      </div>
     </div>
   );
 };
