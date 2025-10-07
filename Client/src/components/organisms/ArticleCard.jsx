@@ -42,11 +42,10 @@ const ArticleCard = ({
         </Link>
 
         {showSummary && summary && (
-  <p className="text-gray-700 text-sm  mt-3 flex-1 overflow-hidden article-summary">
-    {summary}
-  </p>
-)}
-
+          <p className="text-gray-700 text-sm  mt-3 flex-1 overflow-hidden article-summary">
+            {summary}
+          </p>
+        )}
 
         <div className="mt-4 flex justify-between items-center text-xs text-gray-500">
           <span>{author || "Unknown Author"}</span>

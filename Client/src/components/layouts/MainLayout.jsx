@@ -7,20 +7,19 @@ import BoxComponnt from '../organisms/BoxComponnt';
 
 const MainLayout = ({ children }) => {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Top bar always on top */}
+    <div className="flex flex-col min-h-0 bg-gray-50">
+      {/* Top sections */}
       <TopBar />
-      <ContactBar  />
+      <ContactBar />
       <BoxComponnt />
-
-      {/* Navbar below TopBar */}
       <Navbar />
 
       {/* Main content */}
-      <main className="flex-1">
+      <main className="">
         {children}
       </main>
 
+      {/* Footer directly below the content */}
       <Footer />
     </div>
   );

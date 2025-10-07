@@ -5,7 +5,8 @@ import Navlinks from "../atoms/Navlinks";
 import Logo from "../atoms/Logo";
 import { navLinks } from "../../constants/navlinks";
 
-const MotionLink = motion(Link);
+// ✅ Updated: use motion.create() instead of motion()
+const MotionLink = motion.create(Link);
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -30,11 +31,11 @@ const Navbar = () => {
   return (
     <nav
       ref={navbarRef}
-      className="sticky top-0  z-50 w-full shadow-md bg-gray-50"
+      className="sticky top-0 z-50 w-full shadow-md bg-gray-50"
       style={{ height: "80px" }}
     >
       <div className="relative h-full px-6 md:px-12 flex items-center justify-center">
-        {/* Center: Navlinks (always fixed, perfectly centered) */}
+        {/* Center: Navlinks */}
         <div className="flex justify-center w-full">
           <Navlinks
             links={navLinks}
