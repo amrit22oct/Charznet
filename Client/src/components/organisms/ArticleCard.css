@@ -7,16 +7,14 @@
 #card {
   position: relative;
   z-index: 0;
-  
   border-top-left-radius: 16px;
   border-bottom-right-radius: 16px;
   overflow: hidden;
-  background: white;
+  /* REMOVE background: white; */
+  /* background will now come from Tailwind classes */
 }
 
-
-
-/* Glow */
+/* Glow effect */
 #card::before {
   filter: blur(25px);
   opacity: 0.6;
@@ -28,20 +26,20 @@
 }
 
 .article-summary {
-  line-height: 1.5rem; 
-  font-size: 1rem; 
+  line-height: 1.5rem;
+  font-size: 1rem;
   text-align: justify;
 }
 
 .article-summary::first-letter {
   float: left;
-  font-size: calc(1rem * 3 * 1.5); 
-  font-family: "Georgia", "Times New Roman", serif; /* Changed font */
+  font-size: calc(1rem * 3 * 1.5);
+  font-family: "Georgia", "Times New Roman", serif;
   line-height: 1;
   font-weight: bold;
-  color: #1f2937;
+  color: inherit; /* inherit color based on theme */
   margin-right: 0.2rem;
-  margin-top: -0.2rem; 
+  margin-top: -0.2rem;
   vertical-align: top;
 }
 
@@ -51,6 +49,3 @@
     margin-top: -0.15rem;
   }
 }
-
-
-
