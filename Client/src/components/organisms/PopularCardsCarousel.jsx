@@ -1,53 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { motion, useTransform, useSpring, useScroll } from "framer-motion";
 import CardComponent from "../../components/organisms/CardComponent";
+import HorizontalCarousel from "./HorizontalCarousel";
 
 const PopularCardsCarousel = () => {
   const { scrollY } = useScroll();
-  const [isPaused, setIsPaused] = useState(false);
-  const [x, setX] = useState(0);
-  const carouselRef = useRef(null);
-  const [totalWidth, setTotalWidth] = useState(0);
-
-  const headerHeight = 64; 
+  const headerHeight = 64;
   const carouselHeight = 400;
 
-  // Horizontal carousel setup
-  useEffect(() => {
-    if (carouselRef.current) {
-      const firstSet = carouselRef.current.querySelector(".card-set");
-      if (firstSet) {
-        setTotalWidth(firstSet.scrollWidth);
-        setX(-firstSet.scrollWidth);
-      }
-    }
-  }, []);
-
-  // Smooth horizontal animation
-  useEffect(() => {
-    let animationFrame;
-    const speed = 4;
-    const animate = () => {
-      if (!isPaused && totalWidth > 0) {
-        setX((prev) => {
-          let next = prev + speed;
-          if (next >= 0) next -= totalWidth;
-          return next;
-        });
-      }
-      animationFrame = requestAnimationFrame(animate);
-    };
-    animate();
-    return () => cancelAnimationFrame(animationFrame);
-  }, [isPaused, totalWidth]);
-
-  // Header animation relative to scroll
   const totalSectionHeight = headerHeight + carouselHeight;
   const scrollYClamped = useTransform(scrollY, [0, totalSectionHeight], [0, totalSectionHeight]);
+
   const headerYRange = useTransform(scrollYClamped, [0, carouselHeight], [0, carouselHeight]);
   const headerYSmooth = useSpring(headerYRange, { stiffness: 90, damping: 25 });
 
-  // Carousel fade and scale synchronized with header movement
   const carouselOpacityRange = useTransform(scrollYClamped, [0, carouselHeight], [0, 1]);
   const carouselOpacitySmooth = useSpring(carouselOpacityRange, { stiffness: 80, damping: 25 });
 
@@ -69,37 +35,18 @@ const PopularCardsCarousel = () => {
       </motion.div>
 
       {/* Carousel */}
-      <div
-        className="absolute left-0 w-full overflow-hidden z-0"
-        style={{ height: `${carouselHeight}px` }}
+      <motion.div
+        style={{ opacity: carouselOpacitySmooth, scale: carouselScaleSmooth, top: 0 }}
+        className="absolute left-0 w-full z-0"
       >
-        <motion.div
-          ref={carouselRef}
-          className="flex w-max absolute"
-          style={{
-            x,
-            opacity: carouselOpacitySmooth, // synced with header
-            scale: carouselScaleSmooth,
-            top: 0,
-          }}
-        >
-          {[...Array(2)].map((_, setIndex) => (
-            <div className="flex card-set" key={setIndex}>
-              {[...Array(5)].map((_, i) => (
-                <div
-                  key={i}
-                  onMouseEnter={() => setIsPaused(true)}
-                  onMouseLeave={() => setIsPaused(false)}
-                >
-                  <CardComponent index={i} />
-                </div>
-              ))}
-            </div>
+        <HorizontalCarousel>
+          {[...Array(5)].map((_, i) => (
+            <CardComponent key={i} index={i} />
           ))}
-        </motion.div>
-      </div>
+        </HorizontalCarousel>
+      </motion.div>
 
-      {/* Spacer for smooth scrolling */}
+      {/* Spacer */}
       <div style={{ height: `${headerHeight}px` }}></div>
     </div>
   );
