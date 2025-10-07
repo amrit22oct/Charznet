@@ -3,6 +3,9 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import PopularCardsCarousel from "../../components/organisms/PopularCardsCarousel";
 import ContentSection from "../../components/organisms/ContentSection";
 import ArticleContentSection from "../../components/organisms/ArticleContentSection/ArticleContentSection";
+import HorizontalCarousel from "../../components/organisms/HorizontalCarousel";
+import CardComponent from "../../components/organisms/CardComponent";
+import BrandCarousel from "../../components/organisms/BrandCarousel";
 
 const Home = () => {
   const { scrollY } = useScroll();
@@ -11,8 +14,16 @@ const Home = () => {
   const totalSectionHeight = headerHeight + carouselHeight;
 
   // Clamp scrollY for header animation
-  const scrollYClamped = useTransform(scrollY, [0, totalSectionHeight], [0, totalSectionHeight]);
-  const headerYRange = useTransform(scrollYClamped, [0, carouselHeight], [0, carouselHeight]);
+  const scrollYClamped = useTransform(
+    scrollY,
+    [0, totalSectionHeight],
+    [0, totalSectionHeight]
+  );
+  const headerYRange = useTransform(
+    scrollYClamped,
+    [0, carouselHeight],
+    [0, carouselHeight]
+  );
   const headerYSmooth = useSpring(headerYRange, { stiffness: 90, damping: 25 });
 
   return (
@@ -33,11 +44,23 @@ const Home = () => {
           <ArticleContentSection />
         </div>
 
-        {/* Additional sections can go here */}
+        
       </motion.div>
 
       {/* Spacer for smooth scrolling */}
-      <div style={{ height: `${headerHeight + carouselHeight}px` }} />
+
+      
+      <div
+        style={{ height: `${headerHeight + carouselHeight}px` }}
+        className="bg-gray-100"
+      />
+      <BrandCarousel />
+
+
+
+
+
+
     </div>
   );
 };
