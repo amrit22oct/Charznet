@@ -7,6 +7,7 @@ import Profile from '../features/profile/Profile';
 
 // Optional: layout
 import MainLayout from '../components/layouts/MainLayout';
+import NotFound from '../components/organisms/NotFound';
 
 const AppRouter = () => {
   return (
@@ -15,7 +16,7 @@ const AppRouter = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/profile" element={<MainLayout><Profile /></MainLayout>} />
-      <Route path="*" element={<MainLayout><div>Page Not Found</div></MainLayout>} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
