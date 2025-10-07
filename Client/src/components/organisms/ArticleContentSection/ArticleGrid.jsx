@@ -1,18 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import ArticleImage from "./ArticleImage";
-import ArticleText from "./ArticleText";
-import { motion } from "framer-motion";
+import { ThemeContextObject } from "../../../context/ThemeContext";
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 50 },
-  visible: (delay = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, delay },
-  }),
-};
+const ArticleGrid = ({ items, theme }) => {
+  const { theme: currentTheme } = useContext(ThemeContextObject);
+  const activeTheme = theme || currentTheme;
 
-const ArticleGrid = ({ items }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
       {/* Left Column */}
@@ -24,6 +17,7 @@ const ArticleGrid = ({ items }) => {
           text={items[0].text}
           delay={0}
           big
+          theme={activeTheme}
         />
 
         {/* Two smaller cards below */}
@@ -35,6 +29,7 @@ const ArticleGrid = ({ items }) => {
               title={item.title}
               text={item.text}
               delay={index * 0.2}
+              theme={activeTheme}
             />
           ))}
         </div>
@@ -51,6 +46,7 @@ const ArticleGrid = ({ items }) => {
               title={item.title}
               text={item.text}
               delay={index * 0.2}
+              theme={activeTheme}
             />
           ))}
         </div>
@@ -62,6 +58,7 @@ const ArticleGrid = ({ items }) => {
           text={items[5].text}
           delay={0}
           big
+          theme={activeTheme}
         />
       </div>
     </div>

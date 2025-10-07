@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import CardImage from "../molecules/CardImage";
 import CardContent from "../molecules/CardContent";
+import { ThemeContextObject } from "../../context/ThemeContext";
 
 // Mock data for cards
 const mockData = [
@@ -44,10 +45,13 @@ const mockData = [
 
 const CardComponent = ({ index }) => {
   const card = mockData[index % mockData.length];
+  const { theme } = useContext(ThemeContextObject);
 
   return (
     <motion.div
-      className="h-[400px] w-[600px] group shadow-xl flex flex-col items-center justify-center text-white p-6 cursor-pointer overflow-hidden relative "
+      className={`h-[400px] w-[600px] group shadow-xl flex flex-col items-center justify-center p-6 cursor-pointer overflow-hidden relative transition-colors duration-500
+        ${theme === "dark" ? "text-gray-100" : "text-gray-900"}
+      `}
       whileHover={{
         scale: 1.05,
         y: -5,
@@ -60,7 +64,12 @@ const CardComponent = ({ index }) => {
         title={card.title}
         catogary={card.catogary}
         description={card.description}
+        theme={theme} // Pass theme if CardContent needs it
       />
+      {/* Optional overlay for dark mode */}
+      {theme === "dark" && (
+        <div className="absolute inset-0 bg-black/30 pointer-events-none rounded-lg" />
+      )}
     </motion.div>
   );
 };

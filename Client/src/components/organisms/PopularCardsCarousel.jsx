@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { motion, useTransform, useSpring, useScroll } from "framer-motion";
 import CardComponent from "../../components/organisms/CardComponent";
 import HorizontalCarousel from "./HorizontalCarousel";
+import { ThemeContextObject } from "../../context/ThemeContext";
 
 const PopularCardsCarousel = () => {
+  const { theme } = useContext(ThemeContextObject);
   const { scrollY } = useScroll();
+
   const headerHeight = 64;
   const carouselHeight = 400;
-
   const totalSectionHeight = headerHeight + carouselHeight;
-  const scrollYClamped = useTransform(scrollY, [0, totalSectionHeight], [0, totalSectionHeight]);
 
+  const scrollYClamped = useTransform(scrollY, [0, totalSectionHeight], [0, totalSectionHeight]);
   const headerYRange = useTransform(scrollYClamped, [0, carouselHeight], [0, carouselHeight]);
   const headerYSmooth = useSpring(headerYRange, { stiffness: 90, damping: 25 });
 
@@ -27,8 +29,12 @@ const PopularCardsCarousel = () => {
         style={{ y: headerYSmooth }}
         className="absolute top-0 w-full z-50"
       >
-        <div className="h-16 bg-gray-200 flex items-center justify-center text-xl font-bold">
-          <span className="overflow-hidden whitespace-nowrap border-r-2 border-black pr-2">
+        <div
+          className={`h-16 flex items-center justify-center text-xl font-bold transition-colors duration-500 ${
+            theme === "dark" ? "bg-gray-800 text-gray-100 border-gray-100" : "bg-gray-200 text-gray-900 border-gray-900"
+          } border-b-2`}
+        >
+          <span className="overflow-hidden whitespace-nowrap border-r-2 pr-2">
             Most Popular Cards
           </span>
         </div>
