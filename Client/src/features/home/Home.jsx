@@ -54,7 +54,7 @@ const Home = () => {
         style={{ height: `${headerHeight + carouselHeight}px` }}
         className="bg-gray-100"
       />
-      <BrandCarousel />
+     
 
 
 
