@@ -48,6 +48,7 @@ const server = http.createServer(app);
 
 // ✅ Initialize Socket.io with the HTTP server
 initSocket(server);
+//  checking 
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
