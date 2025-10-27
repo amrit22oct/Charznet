@@ -14,6 +14,26 @@ const userSchema = new mongoose.Schema(
       enum: ["superadmin", "author", "user"], // allowed roles
       default: "user", // default role
     },
+
+    // 🟢 Added call-related fields
+    isOnline: { type: Boolean, default: false }, // track online status
+    socketId: { type: String }, // store socket ID for real-time calls
+    currentCall: {
+      isInCall: { type: Boolean, default: false },
+      callType: { type: String, enum: ["audio", "video"], default: null },
+      withUser: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // who they're in a call with
+      startedAt: { type: Date },
+    },
+    lastCall: {
+      callType: { type: String, enum: ["audio", "video"], default: null },
+      callStatus: {
+        type: String,
+        enum: ["missed", "declined", "ended"],
+        default: null,
+      },
+      duration: { type: Number }, // in seconds
+      endedAt: { type: Date },
+    },
   },
   { timestamps: true }
 );

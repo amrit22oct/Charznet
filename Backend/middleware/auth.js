@@ -25,3 +25,6 @@ export const isSuperAdmin = (req,res,next) => {
   }
   next();
 };
+
+// ✅ Added alias for compatibility with routes using `protect`
+export const protect = authMiddleware;
