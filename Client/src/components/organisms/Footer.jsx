@@ -1,16 +1,17 @@
 import React, { useContext } from "react";
-import BrandCarousel from "./BrandCarousel";
-import SocialLinks from "../molecules/SocialLinks";
-import { ThemeContextObject } from "../../context/ThemeContext";
+import BrandCarousel from "./BrandCarousel.jsx";
+import SocialLinks from "../molecules/SocialLinks.jsx";
+import { ThemeContextObject } from "../../context/ThemeContext.jsx";
 
 const Footer = () => {
   const { theme } = useContext(ThemeContextObject);
   const isDark = theme === "dark";
 
-  const bgColor = isDark ? "bg-gray-950" : "bg-gray-100";
-  const textColor = isDark ? "text-gray-300" : "text-gray-700";
+  const bgColor = isDark ? "bg-gray-950" : "bg-gray-400";
+  const textColor = isDark ? "text-gray-200" : "text-gray-900";
   const linkHoverColor = isDark ? "hover:text-indigo-400" : "hover:text-blue-600";
   const borderColor = isDark ? "border-gray-700" : "border-gray-200";
+  const paragraphColor = isDark? "text-gray-300" : "text-gray-700"
 
   return (
     <footer className={`${bgColor} ${textColor} shadow-inner z-50`}>
@@ -21,7 +22,7 @@ const Footer = () => {
         {/* About */}
         <div>
           <h3 className="text-lg font-semibold mb-3">About Us</h3>
-          <p className="text-sm text-gray-500">
+          <p className={` text-sm ${paragraphColor}`} >
             We are a team dedicated to building modern web experiences that are fast, reliable, and user-friendly.
           </p>
         </div>
@@ -40,9 +41,9 @@ const Footer = () => {
         {/* Contact */}
         <div>
           <h3 className="text-lg font-semibold mb-3">Contact</h3>
-          <p className="text-sm text-gray-500">123 Main Street, City, Country</p>
-          <p className="text-sm text-gray-500">Email: info@example.com</p>
-          <p className="text-sm text-gray-500">Phone: +123 456 7890</p>
+          <p className={` text-sm ${paragraphColor}`} > 123 Main Street, City, Country</p>
+          <p className={` text-sm ${paragraphColor}`} >Email: info@example.com</p>
+          <p className={` text-sm ${paragraphColor}`} >Phone: +123 456 7890</p>
         </div>
       </div>
 

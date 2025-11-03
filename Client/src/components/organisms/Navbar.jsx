@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import Navlinks from "../atoms/Navlinks";
-import Logo from "../atoms/Logo";
-import { navLinks } from "../../constants/navlinks";
-import { ThemeContextObject } from "../../context/ThemeContext";
+import Navlinks from "../atoms/Navlinks.jsx";
+import Logo from "../atoms/Logo.jsx";
+import { navLinks } from "../../constants/navlinks.js";
+import { ThemeContextObject } from "../../context/ThemeContext.jsx";
 
 const MotionLink = motion.create(Link);
 
@@ -34,7 +34,7 @@ const Navbar = () => {
   return (
     <nav
       ref={navbarRef}
-      className={`sticky top-0 z-50 w-full shadow-md ${
+      className={`sticky top-0 z-150 w-full shadow-md ${
         isDark ? "bg-gray-900" : "bg-gray-50"
       }`}
       style={{ height: "80px" }}
@@ -92,16 +92,7 @@ const Navbar = () => {
               >
                 Lets Explore
               </span>
-              <button
-                onClick={() => setTheme(isDark ? "light" : "dark")}
-                className={`px-3 py-1 rounded-lg font-semibold transition-colors ${
-                  isDark
-                    ? "bg-gray-200 text-gray-900 hover:bg-gray-300"
-                    : "bg-gray-800 text-white hover:bg-gray-900"
-                }`}
-              >
-                {isDark ? "Light" : "Dark"}
-              </button>
+           
             </motion.div>
           )}
         </AnimatePresence>

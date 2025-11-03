@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { motion } from "framer-motion";
-import ArticleCard from "./ArticleCard";
-import articles from "../../constants/articles";
-import { ThemeContextObject } from "../../context/ThemeContext";
+import ArticleCard from "./ArticleCard.jsx";
+import articles from "../../constants/articles.js";
+import { ThemeContextObject } from "../../context/ThemeContext.jsx";
 
 const containerVariants = {
   hidden: {},
@@ -39,7 +39,7 @@ const ArticleList = () => {
       viewport={{ once: true, amount: 0.3 }}
     >
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 justify-items-center max-w-[1500px] p-4 md:p-6">
-        {articles.map((article) => (
+        {articles.slice(0, 4).map((article) => (
           <motion.div key={article.id} variants={cardVariants}>
             <ArticleCard article={article} />
           </motion.div>
