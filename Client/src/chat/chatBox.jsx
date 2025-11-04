@@ -7,7 +7,8 @@ import {
   sendReplyMessage,
   addMessage,
 } from "../state/slices/messageSlice";
-import { updateLatestMessage } from "../state/slices/chatSlice";
+import { updateChatLatestMessage as updateLatestMessage } from "../state/slices/chatSlice";
+
 import ChatHeader from "./ChatHeader";
 import MessageList from "./MessageList";
 import ReplyBar from "./ReplyBar";
@@ -25,12 +26,8 @@ const ChatBox = ({ activeChat, user }) => {
   const messagesEndRef = useRef(null);
   const chatId = activeChat?._id;
 
-  // ===========================================================
-  // 📡 SOCKET — Join Room + Listen for Incoming Messages
-  // ===========================================================
   useEffect(() => {
     if (!chatId) return;
-
     socket.emit("join chat", chatId);
     socket.off("message received");
 
@@ -38,12 +35,11 @@ const ChatBox = ({ activeChat, user }) => {
       const incomingChatId = msg.chat?._id || msg.chatId;
       if (!incomingChatId || incomingChatId !== chatId) return;
 
-      // Always add directly — don't rely on old state
       dispatch(addMessage(msg));
+      dispatch(updateLatestMessage({ chatId, message: msg }));
 
-      // 🔔 Notify if it's from another user
       if (msg.senderId?._id !== user._id) {
-        toast.info(`💬 ${msg.senderId?.name || "New message"}`, {
+        toast.info(` ${msg.senderId?.name || "New message"}`, {
           position: "bottom-right",
           autoClose: 1500,
         });
@@ -52,30 +48,20 @@ const ChatBox = ({ activeChat, user }) => {
     };
 
     socket.on("message received", handleIncoming);
-
     return () => {
       socket.emit("leave chat", chatId);
       socket.off("message received", handleIncoming);
     };
   }, [chatId, dispatch, user]);
 
-  // ===========================================================
-  // 📨 Load Messages When Chat Changes
-  // ===========================================================
   useEffect(() => {
     if (chatId) dispatch(getMessages(chatId));
   }, [dispatch, chatId]);
 
-  // ===========================================================
-  // 📜 Auto-scroll
-  // ===========================================================
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // ===========================================================
-  // ✉️ Send Message / Reply
-  // ===========================================================
   const handleSend = useCallback(
     async (e) => {
       e.preventDefault();
@@ -90,19 +76,16 @@ const ChatBox = ({ activeChat, user }) => {
         const action = replyingTo ? sendReplyMessage : sendNewMessage;
         const res = await dispatch(action(payload)).unwrap();
 
-        // Update sidebar’s latest message
-        dispatch(updateLatestMessage({ chatId, latestMessage: res }));
+        // ✅ Correct key
+        dispatch(updateLatestMessage({ chatId, message: res }));
 
-        // ✅ Emit to others with full chat object
         socket.emit("new message", {
           ...res,
           chat: activeChat && activeChat.users ? activeChat : { _id: chatId },
           senderId: user,
         });
 
-        // ✅ Show instantly for sender
         dispatch(addMessage(res));
-
         setNewMessage("");
         setReplyingTo(null);
       } catch (err) {
@@ -115,15 +98,9 @@ const ChatBox = ({ activeChat, user }) => {
     [dispatch, isSending, chatId, newMessage, replyingTo, activeChat, user]
   );
 
-  // ===========================================================
-  // 🗨️ Reply Handling
-  // ===========================================================
   const handleReplyClick = useCallback((msg) => setReplyingTo(msg), []);
   const cancelReply = useCallback(() => setReplyingTo(null), []);
 
-  // ===========================================================
-  // 🚫 Empty State
-  // ===========================================================
   if (!activeChat)
     return (
       <div className="flex-1 flex items-center justify-center text-gray-400 text-lg">
@@ -131,9 +108,6 @@ const ChatBox = ({ activeChat, user }) => {
       </div>
     );
 
-  // ===========================================================
-  // 🧱 Render
-  // ===========================================================
   return (
     <div className="flex flex-col h-full bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
       <ChatHeader activeChat={activeChat} user={user} />

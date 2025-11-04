@@ -28,20 +28,18 @@ const MessageList = ({
         return (
           <div
             key={msg._id}
-            className={`flex ${
-              isSender ? "justify-end" : "justify-start"
-            } w-full`}
+            className={`flex w-full ${isSender ? "justify-end" : "justify-start"}`}
           >
             <div
               className={`max-w-[75%] rounded-2xl px-4 py-2 shadow-sm ${
                 isSender
-                  ? "bg-blue-600 text-white self-end"
-                  : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white"
+                  ? "bg-blue-600 text-white rounded-br-none"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-bl-none"
               }`}
             >
               {/* 🔁 Reply Preview */}
               {msg.replyTo && (
-                <div className="text-xs italic text-gray-300 dark:text-gray-400 border-l-2 border-gray-400 pl-2 mb-1">
+                <div className="text-xs italic text-gray-200 dark:text-gray-400 border-l-2 border-gray-400 pl-2 mb-1">
                   Replying to: {msg.replyTo?.content || "message"}
                 </div>
               )}

@@ -7,31 +7,40 @@ import {
   fetchChats,
   setActiveChat,
   addChat,
-  updateLatestMessage,
+  updateChatLatestMessage as updateLatestMessage,
+  incrementUnreadCount as incrementUnread,
 } from "../state/slices/chatSlice.js";
+
 import {
   addMessage,
   getMessages,
   clearMessages,
 } from "../state/slices/messageSlice.js";
 import { getCurrentUser } from "../api/authApi.js";
+import { toast } from "react-toastify";
 
 const ChatPage = () => {
   const dispatch = useDispatch();
-  const { chats, activeChat, status } = useSelector((state) => state.chat);
+  const { chats, activeChat } = useSelector((state) => state.chat);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState("");
-  const [unreadCounts, setUnreadCounts] = useState({});
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   const activeChatRef = useRef(null);
+
+  useEffect(() => {
+    if (!user) return;
+    socket.emit("setup", user);
+    socket.on("connected", () => console.log("✅ Socket connected for", user.name));
+  }, [user]);
+  
   useEffect(() => {
     activeChatRef.current = activeChat;
   }, [activeChat]);
 
-  /* ============================================================
-     🔹 Load user and fetch chats
-     ============================================================ */
+  // ===================================================
+  // 🔹 Load user & chats on mount
+  // ===================================================
   useEffect(() => {
     const init = async () => {
       const storedToken = localStorage.getItem("token");
@@ -39,12 +48,10 @@ const ChatPage = () => {
       setToken(storedToken);
 
       try {
-        const currentUser = await getCurrentUser();
-
-        // ✅ FIX: Extract user correctly
-        const userData = currentUser?.user || currentUser;
-        setUser(userData);
-        console.log("✅ Logged in user:", userData?.name, userData?._id);
+        const res = await getCurrentUser();
+        const currentUser = res.user || res;
+        console.log("✅ Logged in user:", currentUser);
+        setUser(currentUser);
 
         dispatch(fetchChats());
       } catch (err) {
@@ -55,13 +62,13 @@ const ChatPage = () => {
     init();
   }, [dispatch]);
 
-  /* ============================================================
-     🔹 Socket Listeners
-     ============================================================ */
+  // ===================================================
+  // 🔹 Socket listeners (real-time events)
+  // ===================================================
   useEffect(() => {
     if (!user) return;
 
-    console.log("🔌 Listening for socket events for:", user.name);
+    console.log("🔌 Listening for socket events for:", user.name || user.email);
 
     const handleOnlineUsers = (users) => setOnlineUsers(users);
     const handleChatCreated = (newChat) => dispatch(addChat(newChat));
@@ -70,15 +77,23 @@ const ChatPage = () => {
       const chatId = msg.chat?._id || msg.chatId;
       if (!chatId) return;
 
+      // ✅ Update the latest message in Redux (sidebar)
       dispatch(updateLatestMessage({ chatId, message: msg }));
 
-      if (activeChatRef.current && activeChatRef.current._id === chatId) {
-        dispatch(addMessage(msg));
-      } else {
-        setUnreadCounts((prev) => ({
-          ...prev,
-          [chatId]: (prev[chatId] || 0) + 1,
-        }));
+      // ✅ Store message globally (so ChatBox has it)
+      dispatch(addMessage(msg));
+
+      // ✅ If this chat isn’t open, mark it unread + show notification
+      if (!activeChatRef.current || activeChatRef.current._id !== chatId) {
+        dispatch(incrementUnread(chatId));
+
+        // Optional: Toast / sound notification
+        toast.info(`💬 New message from ${msg.senderId?.name || "someone"}`, {
+          position: "bottom-right",
+          autoClose: 2000,
+        });
+
+        new Audio("/notification.mp3").play().catch(() => {});
       }
     };
 
@@ -93,38 +108,25 @@ const ChatPage = () => {
     };
   }, [user, dispatch]);
 
-  /* ============================================================
-     🔹 Handle Chat Selection
-     ============================================================ */
+  // ===================================================
+  // 🔹 When user selects a chat
+  // ===================================================
   const handleSelectChat = (chat) => {
+    // This will automatically reset unread in Redux
     dispatch(setActiveChat(chat));
+
     dispatch(clearMessages());
     dispatch(getMessages(chat._id));
-    setUnreadCounts((prev) => ({ ...prev, [chat._id]: 0 }));
   };
 
-  /* ============================================================
-     🔹 Loading State
-     ============================================================ */
-  if (status === "loading" || !user) {
-    return (
-      <div className="flex h-screen items-center justify-center text-gray-600 dark:text-gray-200">
-        Loading chats...
-      </div>
-    );
-  }
-
-  /* ============================================================
-     🔹 Render
-     ============================================================ */
+  // ===================================================
+  // 🔹 Layout
+  // ===================================================
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
       <ChatSidebar
-        chats={chats}
         onSelectChat={handleSelectChat}
-        activeChatId={activeChat?._id}
         user={user}
-        unreadCounts={unreadCounts}
         onlineUsers={onlineUsers}
       />
 

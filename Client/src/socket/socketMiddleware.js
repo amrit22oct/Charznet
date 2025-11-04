@@ -1,7 +1,8 @@
 // src/socket/socketMiddleware.js
 import socket from "../api/socket";
 import { addMessage } from "../state/slices/messageSlice";
-import { updateLatestMessage, incrementUnread } from "../state/slices/chatSlice";
+import {   updateChatLatestMessage as updateLatestMessage,
+  incrementUnreadCount as incrementUnread,} from "../state/slices/chatSlice";
 import { setOnlineUsers } from "../state/slices/socketSlice";
 import { logout } from "../state/slices/authSlice";
 

@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchMessage, sendMessage, replyMessage } from "../../api/chatApi";
-import { updateLatestMessage } from "./chatSlice";
+import { updateChatLatestMessage as updateLatestMessage } from "./chatSlice";
+
+
 
 /** --- Async thunks --- */
 export const getMessages = createAsyncThunk("message/getMessages", async (chatId, thunkAPI) => {
